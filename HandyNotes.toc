@@ -1,0 +1,8 @@
+## Interface: 11404
+## Version: 0.0.2
+## Title: Handy Notes
+## Notes: A handy way to remember!
+## Author: Sabbas
+## SavedVariablesPerCharacter: NotesText
+
+HandyNotes.lua
