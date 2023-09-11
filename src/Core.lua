@@ -48,6 +48,7 @@ MainFrame.inputField:SetMaxLetters(40)
 local notes = {}
 local y_offset_surplus = 0
 
+-- Add a note to the frame
 local function AddNote(string, save)
     if #string < 1 then
         return
@@ -90,7 +91,7 @@ local function AddNote(string, save)
     end)
 end
 
--- Load previous notes
+-- Load data
 MainFrame:SetScript("OnEvent", function (self, event, arg1)
     if event == "ADDON_LOADED" and arg1 == "HandyNotes" then
         print("HandyNotes loaded!")
@@ -100,6 +101,13 @@ MainFrame:SetScript("OnEvent", function (self, event, arg1)
             foreach(NotesText, function (key, value)
                 AddNote(value, false)
             end)
+        end
+        if HandyNotesDB == nil then
+            print("HandyNotesDB Created!")
+            HandyNotesDB = {}
+        else
+            print(type(HandyNotesDB))
+            print("HandyNotesDB already exists!!")
         end
     end
 end)
@@ -150,51 +158,32 @@ resizeButton:SetScript("OnMouseUp", function(self, button)
     MainFrame.inputField:StopMovingOrSizing()
     MainFrame:StopMovingOrSizing()
 end)
+
 -----------------------------------------------------------
 -- Create minimap button
-local minibtn = CreateFrame("Button", nil, Minimap)
-minibtn:SetFrameLevel(8)
-minibtn:SetSize(32,32)
-minibtn:SetMovable(true)
+MainFrame:SetScript("OnEvent", function (self, event, arg1)
+    if event == "ADDON_LOADED" and arg1 == "HandyNotes" then
+        local HandyNotesLDB = LibStub("LibDataBroker-1.1", true)
+        local LDBIcon = LibStub("LibDBIcon-1.0", true)
 
-minibtn:SetNormalTexture("Interface/COMMON/Indicator-Yellow.png")
-minibtn:SetPushedTexture("Interface/COMMON/Indicator-Yellow.png")
-minibtn:SetHighlightTexture("Interface/COMMON/Indicator-Yellow.png")
+        local minimapButton = HandyNotesLDB:NewDataObject("HandyNotes", {
+            type = "launcher",
+            icon = "Interface\\AddOns\\HandyNotes\\images\\HandyNotesIcon.tga",
+            OnClick = function(self, button)
+                if (MainFrame:IsShown()) then
+                    MainFrame:Hide()
+                else
+                    MainFrame:Show()
+                end
+            end,
+            OnTooltipShow = function(tooltip)
+                if not tooltip or not tooltip.AddLine then return end
+                tooltip:AddLine("Handy Notes")
+            end,
+        })
 
-local myIconPos = 0
-
--- Control movement
-local function UpdateMapBtn()
-    local Xpoa, Ypoa = GetCursorPosition()
-    local Xmin, Ymin = Minimap:GetLeft(), Minimap:GetBottom()
-    Xpoa = Xmin - Xpoa / Minimap:GetEffectiveScale() + 70
-    Ypoa = Ypoa / Minimap:GetEffectiveScale() - Ymin - 70
-    myIconPos = math.deg(math.atan2(Ypoa, Xpoa))
-    minibtn:ClearAllPoints()
-    minibtn:SetPoint("TOPLEFT", Minimap, "TOPLEFT", 52 - (80 * cos(myIconPos)), (80 * sin(myIconPos)) - 52)
-end
- 
-minibtn:RegisterForDrag("LeftButton")
-minibtn:SetScript("OnDragStart", function()
-    minibtn:StartMoving()
-    minibtn:SetScript("OnUpdate", UpdateMapBtn)
-end)
- 
-minibtn:SetScript("OnDragStop", function()
-    minibtn:StopMovingOrSizing();
-    minibtn:SetScript("OnUpdate", nil)
-    UpdateMapBtn();
-end)
- 
--- Set position
-minibtn:ClearAllPoints();
-minibtn:SetPoint("TOPLEFT", Minimap, "TOPLEFT", 52 - (80 * cos(myIconPos)),(80 * sin(myIconPos)) - 52)
- 
--- Control clicks
-minibtn:SetScript("OnClick", function()
-    if MainFrame:IsShown() then
-        MainFrame:Hide()
-    else
-        MainFrame:Show()
+        LDBIcon:Register("HandyNotes", minimapButton, HandyNotesDB)
+        print(type(HandyNotesDB))
     end
 end)
+

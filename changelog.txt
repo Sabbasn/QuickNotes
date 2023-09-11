@@ -1,4 +1,4 @@
 <ul>
-    <li></li>
-    <li></li>
+    <li>Implemented LibDBIcon - making the minimap button universal</li>
+    <li>Implemented custom icon for the minimap button</li>
 </ul>
