@@ -1,8 +1,8 @@
 ## Interface: 11404
-## Version: 0.0.2
+## Version: 1.0.0
 ## Title: Handy Notes
-## Notes: A handy way to remember!
+## Notes: A handy notebook to scribble on!
 ## Author: Sabbas
 ## SavedVariablesPerCharacter: NotesText
 
-HandyNotes.lua
+Core.lua

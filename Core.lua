@@ -1,61 +1,74 @@
 -- Creating the main frame
-local MainFrame = CreateFrame("Frame", "HN_MainFrame", UIParent, "BasicFrameTemplateWithInset")
-MainFrame:SetSize(200, 300)
+local MainFrame = CreateFrame("Frame", "HN_MainFrame", UIParent)
+MainFrame:SetSize(225, 300)
 MainFrame:SetPoint("CENTER")
 MainFrame:RegisterEvent("ADDON_LOADED")
 
--- Enable dragging of main frame
+-- Main Frame Background
+MainFrame.bg = MainFrame:CreateTexture("HN_BackGround", "BACKGROUND")
+MainFrame.bg:SetAllPoints(true)
+MainFrame.bg:SetColorTexture(0, 0, 0, 0.3)
+
+-- Enable dragging and resizing of main frame
 MainFrame:SetMovable(true)
 MainFrame:EnableMouse(true)
+MainFrame:SetResizable(true)
+MainFrame:SetResizeBounds(225, 200, 225, 600)
 MainFrame:RegisterForDrag("LeftButton")
 MainFrame:SetScript("OnDragStart", MainFrame.StartMoving)
 MainFrame:SetScript("OnDragStop", MainFrame.StopMovingOrSizing)
 
+-- Scroll frame
+MainFrame.ScrollFrame = CreateFrame("ScrollFrame", nil, MainFrame, "UIPanelScrollFrameTemplate")
+MainFrame.ScrollFrame:SetPoint("TOPLEFT", MainFrame, "TOPLEFT", 0, -60)
+MainFrame.ScrollFrame:SetPoint("BOTTOMRIGHT", MainFrame, "BOTTOMRIGHT", 0, 15)
+MainFrame.ScrollFrame:SetClipsChildren(true)
+
+local child = CreateFrame("Frame", nil, MainFrame.ScrollFrame)
+child:SetSize(225, 270)
+
+MainFrame.ScrollFrame:SetScrollChild(child)
+
 -- Title
-MainFrame.title = MainFrame:CreateFontString(nil, "OVERLAY")
-MainFrame.title:SetFontObject("GameFontHighlight")
-MainFrame.title:SetPoint("LEFT", MainFrame.TitleBg, "LEFT", 5, 0)
+MainFrame.title = MainFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+MainFrame.title:SetTextColor(1, 1, 0, 1)
+MainFrame.title:SetScale(1.25)
+MainFrame.title:SetPoint("TOP", MainFrame, 0, -6)
 MainFrame.title:SetText("Handy Notes")
 
 -- Player input
 MainFrame.inputField = CreateFrame("EditBox", nil, MainFrame, "InputBoxTemplate")
 MainFrame.inputField:SetPoint("TOPLEFT", MainFrame, 15, -30)
-MainFrame.inputField:SetSize(140, 30)
+MainFrame.inputField:SetResizable(true)
+local mainFrameWidth = MainFrame:GetWidth()
+MainFrame.inputField:SetSize(mainFrameWidth*0.75, 30)
 MainFrame.inputField:SetAutoFocus(false)
-MainFrame.inputField:SetMaxLetters(20)
+MainFrame.inputField:SetMaxLetters(40)
 
 local notes = {}
 local y_offset_surplus = 0
-local deleteButtons = {}
 
 local function AddNote(string, save)
+    if #string < 1 then
+        return
+    end
     if save then
         table.insert(NotesText, string)
     end
-    MainFrame.noteField = MainFrame:CreateFontString(nil, "OVERLAY")
-    MainFrame.noteField:SetJustifyH("LEFT")
-    MainFrame.noteField:SetFontObject("GameFontHighlight")
-    MainFrame.noteField:SetPoint("CENTER", MainFrame, "TOP", 0, -80 - y_offset_surplus)
+    MainFrame.ScrollFrame:SetClipsChildren(true)
+    MainFrame.noteField = CreateFrame("Button", nil, child)
+    MainFrame.noteField:SetPoint("TOPLEFT", child, 0, 0 - y_offset_surplus)
     y_offset_surplus = y_offset_surplus + 20
     MainFrame.noteField:SetText(string)
+    MainFrame.noteField:SetNormalFontObject("GameFontWhite")
+    MainFrame.noteField:SetSize(225, 30)
     MainFrame.inputField:ClearFocus()
     MainFrame.inputField:SetText("")
-    MainFrame.noteField:SetSize(170, 30)
 
     local noteField = MainFrame.noteField
-
-    local _, _, _, _, noteY = MainFrame.noteField:GetPoint(1)
     table.insert(notes, MainFrame.noteField)
 
-    MainFrame.noteDeleteBtn = CreateFrame("Button", nil, MainFrame, "GameMenuButtonTemplate")
-    MainFrame.noteDeleteBtn:SetPoint("CENTER", MainFrame, "TOP", 75, noteY)
-    MainFrame.noteDeleteBtn:SetSize(30, 20)
-    MainFrame.noteDeleteBtn:SetText("-")
-    MainFrame.noteDeleteBtn:SetNormalFontObject("GameFontNormalLarge")
-
-    table.insert(deleteButtons, MainFrame.noteDeleteBtn)
-
-    MainFrame.noteDeleteBtn:SetScript("OnClick", function (self)
+    MainFrame.noteField:SetScript("OnClick", function (self)
         noteField:SetShown(false)
         self:SetShown(false)
         foreach(NotesText, function (key, value)
@@ -68,9 +81,7 @@ local function AddNote(string, save)
         table.foreach(notes, function (key, value)
             if shouldMove then
                 local _, _, _, _, oldY = value:GetPoint(1)
-                value:SetPoint("CENTER", MainFrame, "TOP", 0, oldY + 20)
-                local _, _, _, _, oldY = deleteButtons[key]:GetPoint(1)
-                deleteButtons[key]:SetPoint("CENTER", MainFrame, "TOP", 75, oldY + 20)
+                value:SetPoint("TOPLEFT", child, "TOPLEFT", 0, oldY + 20)
             end
             if value == noteField then
                 shouldMove = true
@@ -107,12 +118,38 @@ MainFrame.addBtn:SetScript("OnClick", function()
     AddNote(MainFrame.inputField:GetText(), true)
 end)
 
-
-SLASH_PHRASE1 = "/hn"
-SlashCmdList['PHRASE'] = function()
-    MainFrame:Show()
+local function commandHandler(arg)
+    if arg == "clear" then
+        table.wipe(NotesText)
+        print("Cleared all notes!")
+    else
+        MainFrame:Show()
+    end
 end
 
+SLASH_PHRASE1 = "/hn"
+SLASH_PHRASE2 = "/hn clear"
+SlashCmdList['PHRASE'] = commandHandler
+
+-----------------------------------------------------------
+-- Resize Button
+local resizeButton = CreateFrame("Button", nil, MainFrame)
+resizeButton:SetSize(16, 16)
+resizeButton:SetPoint("BOTTOMRIGHT")
+resizeButton:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
+resizeButton:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
+resizeButton:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
+ 
+resizeButton:SetScript("OnMouseDown", function(self, button)
+    MainFrame:StartSizing("BOTTOMRIGHT")
+    MainFrame.inputField:StartSizing("BOTTOMRIGHT")
+    MainFrame:SetUserPlaced(true)
+end)
+ 
+resizeButton:SetScript("OnMouseUp", function(self, button)
+    MainFrame.inputField:StopMovingOrSizing()
+    MainFrame:StopMovingOrSizing()
+end)
 -----------------------------------------------------------
 -- Create minimap button
 local minibtn = CreateFrame("Button", nil, Minimap)

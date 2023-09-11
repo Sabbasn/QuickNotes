@@ -1,8 +1,6 @@
 {
     "Lua.diagnostics.globals": [
-        "APIDocumentation",
         "SlashCmdList",
-        "Add",
         "GetCursorPosition"
     ]
 }
