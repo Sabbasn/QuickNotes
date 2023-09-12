@@ -1,11 +1,18 @@
 -- Creating the main frame
-local MainFrame = CreateFrame("Frame", "HN_MainFrame", UIParent)
+local MainFrame = CreateFrame("Frame", "QN_MainFrame", UIParent)
 MainFrame:SetSize(225, 300)
 MainFrame:SetPoint("CENTER")
 MainFrame:RegisterEvent("ADDON_LOADED")
 
+MainFrame:SetScript("OnEvent", function(__, event, arg1)
+    warn("loaded!")
+    if (event == "ADDON_LOADED" and arg1 == "QuickNotes") then
+        print("Addon has successfully loaded!")
+    end
+end)
+
 -- Main Frame Background
-MainFrame.bg = MainFrame:CreateTexture("HN_BackGround", "BACKGROUND")
+MainFrame.bg = MainFrame:CreateTexture("QN_BackGround", "BACKGROUND")
 MainFrame.bg:SetAllPoints(true)
 MainFrame.bg:SetColorTexture(0, 0, 0, 0.3)
 
@@ -34,7 +41,7 @@ MainFrame.title = MainFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight"
 MainFrame.title:SetTextColor(1, 1, 0, 1)
 MainFrame.title:SetScale(1.25)
 MainFrame.title:SetPoint("TOP", MainFrame, 0, -6)
-MainFrame.title:SetText("Handy Notes")
+MainFrame.title:SetText("Quick Notes")
 
 -- Player input
 MainFrame.inputField = CreateFrame("EditBox", nil, MainFrame, "InputBoxTemplate")
@@ -54,7 +61,7 @@ local function AddNote(string, save)
         return
     end
     if save then
-        table.insert(NotesText, string)
+        table.insert(CharNotesDB, string)
     end
     MainFrame.ScrollFrame:SetClipsChildren(true)
     MainFrame.noteField = CreateFrame("Button", nil, child)
@@ -72,9 +79,9 @@ local function AddNote(string, save)
     MainFrame.noteField:SetScript("OnClick", function (self)
         noteField:SetShown(false)
         self:SetShown(false)
-        foreach(NotesText, function (key, value)
+        foreach(CharNotesDB, function (key, value)
             if value == noteField:GetText() then
-                table.remove(NotesText, tonumber(key))
+                table.remove(CharNotesDB, tonumber(key))
             end
         end)
         local shouldMove = false
@@ -91,27 +98,30 @@ local function AddNote(string, save)
     end)
 end
 
--- Load data
+-- Load database
 MainFrame:SetScript("OnEvent", function (self, event, arg1)
-    if event == "ADDON_LOADED" and arg1 == "HandyNotes" then
-        print("HandyNotes loaded!")
-        if NotesText == nil then
-            NotesText = {}
+    if event == "ADDON_LOADED" and arg1 == "QuickNotes" then
+        print("QuickNotes loaded")
+        print("Type of CharNotesDB: " .. type(CharNotesDB))
+        if CharNotesDB == nil then
+            print("NotesDB created!")
+            CharNotesDB = {}
         else
-            foreach(NotesText, function (key, value)
+            foreach(CharNotesDB, function (key, value)
                 AddNote(value, false)
             end)
         end
-        if HandyNotesDB == nil then
-            print("HandyNotesDB Created!")
-            HandyNotesDB = {}
+        if QuickNotesDB == nil then
+            print("QuickNotesDB Created!")
+            QuickNotesDB = {}
         else
-            print(type(HandyNotesDB))
-            print("HandyNotesDB already exists!!")
+            print(type(QuickNotesDB))
+            print("QuickNotesDB already exists!!")
         end
     end
 end)
 
+-- Add note by pressing Enter
 MainFrame.inputField:SetScript("OnEnterPressed", function ()
     AddNote(MainFrame.inputField:GetText(), true)
 end)
@@ -126,17 +136,18 @@ MainFrame.addBtn:SetScript("OnClick", function()
     AddNote(MainFrame.inputField:GetText(), true)
 end)
 
+-- Handles slash commands
 local function commandHandler(arg)
     if arg == "clear" then
-        table.wipe(NotesText)
+        table.wipe(CharNotesDB)
         print("Cleared all notes!")
     else
         MainFrame:Show()
     end
 end
 
-SLASH_PHRASE1 = "/hn"
-SLASH_PHRASE2 = "/hn clear"
+SLASH_PHRASE1 = "/qn"
+SLASH_PHRASE2 = "/qn clear"
 SlashCmdList['PHRASE'] = commandHandler
 
 -----------------------------------------------------------
@@ -162,13 +173,13 @@ end)
 -----------------------------------------------------------
 -- Create minimap button
 MainFrame:SetScript("OnEvent", function (self, event, arg1)
-    if event == "ADDON_LOADED" and arg1 == "HandyNotes" then
-        local HandyNotesLDB = LibStub("LibDataBroker-1.1", true)
+    if event == "ADDON_LOADED" and arg1 == "QuickNotes" then
+        local QuickNotesLDB = LibStub("LibDataBroker-1.1", true)
         local LDBIcon = LibStub("LibDBIcon-1.0", true)
 
-        local minimapButton = HandyNotesLDB:NewDataObject("HandyNotes", {
+        local minimapButton = QuickNotesLDB:NewDataObject("QuickNotes", {
             type = "launcher",
-            icon = "Interface\\AddOns\\HandyNotes\\images\\HandyNotesIcon.tga",
+            icon = "Interface\\AddOns\\QuickNotes\\images\\QuickNotesIcon.tga",
             OnClick = function(self, button)
                 if (MainFrame:IsShown()) then
                     MainFrame:Hide()
@@ -178,12 +189,11 @@ MainFrame:SetScript("OnEvent", function (self, event, arg1)
             end,
             OnTooltipShow = function(tooltip)
                 if not tooltip or not tooltip.AddLine then return end
-                tooltip:AddLine("Handy Notes")
+                tooltip:AddLine("Quick Notes")
             end,
         })
 
-        LDBIcon:Register("HandyNotes", minimapButton, HandyNotesDB)
-        print(type(HandyNotesDB))
+        LDBIcon:Register("QuickNotes", minimapButton, QuickNotesDB)
     end
 end)
 

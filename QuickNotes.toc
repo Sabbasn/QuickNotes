@@ -1,0 +1,10 @@
+## Interface: 11404
+## Version: 1.2.0
+## Title: Quick Notes
+## Notes: A simple notebook to scribble down notes
+## Author: Sabbas
+## SavedVariables: QuickNotesDB
+## SavedVariablesPerCharacter: CharNotesDB
+
+libs/embeds.xml
+src/Core.lua

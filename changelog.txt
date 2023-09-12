@@ -1,4 +1,4 @@
 <ul>
-    <li>Implemented LibDBIcon - making the minimap button universal</li>
-    <li>Implemented custom icon for the minimap button</li>
+    <li>Changed name from 'Handy Notes' to 'Quick Notes' to avoid confusion with the already popular addon
+    with the same name</li>
 </ul>
