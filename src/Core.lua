@@ -1,17 +1,31 @@
--- Creating the main frame
-local MainFrame = CreateFrame("Frame", "QN_MainFrame", UIParent)
-MainFrame:SetSize(225, 300)
-MainFrame:SetPoint("CENTER")
+-- Load Databases
+MainFrame = CreateFrame("Frame", "QN_MainFrame", UIParent)
 MainFrame:RegisterEvent("ADDON_LOADED")
 
-MainFrame:SetScript("OnEvent", function(__, event, arg1)
-    warn("loaded!")
-    if (event == "ADDON_LOADED" and arg1 == "QuickNotes") then
-        print("Addon has successfully loaded!")
+-- Load Databases
+MainFrame:SetScript("OnEvent", function(self, event, arg1)
+    if event == "ADDON_LOADED" and arg1 == "QuickNotes" then
+        print("QuickNotes loaded!")
+        if CharNotesDB == nil then
+            CharNotesDB = {}
+        else
+            print("CharNotesDB already exists!")
+            foreach(CharNotesDB, function (key, value)
+                AddNote(value, false)
+            end)
+        end
+        if QuickNotesDB == nil then
+            QuickNotesDB = {}
+        else
+            print("QuickNotesDB already exists!")
+        end
+        CreateMinimapButton()
     end
 end)
 
 -- Main Frame Background
+MainFrame:SetSize(225, 300)
+MainFrame:SetPoint("CENTER")
 MainFrame.bg = MainFrame:CreateTexture("QN_BackGround", "BACKGROUND")
 MainFrame.bg:SetAllPoints(true)
 MainFrame.bg:SetColorTexture(0, 0, 0, 0.3)
@@ -56,13 +70,11 @@ local notes = {}
 local y_offset_surplus = 0
 
 -- Add a note to the frame
-local function AddNote(string, save)
-    if #string < 1 then
-        return
-    end
-    if save then
-        table.insert(CharNotesDB, string)
-    end
+function AddNote(string, save)
+    if #string < 1 then return end
+
+    if save then table.insert(CharNotesDB, string) end
+
     MainFrame.ScrollFrame:SetClipsChildren(true)
     MainFrame.noteField = CreateFrame("Button", nil, child)
     MainFrame.noteField:SetPoint("TOPLEFT", child, 0, 0 - y_offset_surplus)
@@ -97,29 +109,6 @@ local function AddNote(string, save)
         end)
     end)
 end
-
--- Load database
-MainFrame:SetScript("OnEvent", function (self, event, arg1)
-    if event == "ADDON_LOADED" and arg1 == "QuickNotes" then
-        print("QuickNotes loaded")
-        print("Type of CharNotesDB: " .. type(CharNotesDB))
-        if CharNotesDB == nil then
-            print("NotesDB created!")
-            CharNotesDB = {}
-        else
-            foreach(CharNotesDB, function (key, value)
-                AddNote(value, false)
-            end)
-        end
-        if QuickNotesDB == nil then
-            print("QuickNotesDB Created!")
-            QuickNotesDB = {}
-        else
-            print(type(QuickNotesDB))
-            print("QuickNotesDB already exists!!")
-        end
-    end
-end)
 
 -- Add note by pressing Enter
 MainFrame.inputField:SetScript("OnEnterPressed", function ()
@@ -172,28 +161,25 @@ end)
 
 -----------------------------------------------------------
 -- Create minimap button
-MainFrame:SetScript("OnEvent", function (self, event, arg1)
-    if event == "ADDON_LOADED" and arg1 == "QuickNotes" then
-        local QuickNotesLDB = LibStub("LibDataBroker-1.1", true)
-        local LDBIcon = LibStub("LibDBIcon-1.0", true)
+function CreateMinimapButton()
+    local QuickNotesLDB = LibStub("LibDataBroker-1.1", true)
+    local LDBIcon = LibStub("LibDBIcon-1.0", true)
 
-        local minimapButton = QuickNotesLDB:NewDataObject("QuickNotes", {
-            type = "launcher",
-            icon = "Interface\\AddOns\\QuickNotes\\images\\QuickNotesIcon.tga",
-            OnClick = function(self, button)
-                if (MainFrame:IsShown()) then
-                    MainFrame:Hide()
-                else
-                    MainFrame:Show()
-                end
-            end,
-            OnTooltipShow = function(tooltip)
-                if not tooltip or not tooltip.AddLine then return end
-                tooltip:AddLine("Quick Notes")
-            end,
-        })
+    local minimapButton = QuickNotesLDB:NewDataObject("QuickNotes", {
+        type = "launcher",
+        icon = "Interface\\AddOns\\QuickNotes\\Images\\QuickNotesIcon.tga",
+        OnClick = function(self, button)
+            if (MainFrame:IsShown()) then
+                MainFrame:Hide()
+            else
+                MainFrame:Show()
+            end
+        end,
+        OnTooltipShow = function(tooltip)
+            if not tooltip or not tooltip.AddLine then return end
+            tooltip:AddLine("Quick Notes")
+        end,
+    })
 
-        LDBIcon:Register("QuickNotes", minimapButton, QuickNotesDB)
-    end
-end)
-
+    LDBIcon:Register("QuickNotes", minimapButton, QuickNotesDB)
+end
