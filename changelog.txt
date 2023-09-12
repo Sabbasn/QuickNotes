@@ -1,4 +1,1 @@
-<ul>
-    <li>Changed name from 'Handy Notes' to 'Quick Notes' to avoid confusion with the already popular addon
-    with the same name</li>
-</ul>
+- Changed name from 'Handy Notes' to 'Quick Notes' to avoid confusion with the already popular addon with the same name
