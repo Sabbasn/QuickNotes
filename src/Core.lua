@@ -9,15 +9,12 @@ MainFrame:SetScript("OnEvent", function(self, event, arg1)
         if CharNotesDB == nil then
             CharNotesDB = {}
         else
-            print("CharNotesDB already exists!")
             foreach(CharNotesDB, function (key, value)
                 AddNote(value, false)
             end)
         end
         if QuickNotesDB == nil then
             QuickNotesDB = {}
-        else
-            print("QuickNotesDB already exists!")
         end
         CreateMinimapButton()
     end
