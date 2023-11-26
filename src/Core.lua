@@ -126,7 +126,10 @@ end)
 local function commandHandler(arg)
     if arg == "clear" then
         table.wipe(CharNotesDB)
-        print("Cleared all notes!")
+        for _, note in pairs(notes) do
+            note:SetShown(false)
+        end
+        print("|cffffcc00QuickNotes:|r Cleared all notes!")
     else
         MainFrame:Show()
     end
