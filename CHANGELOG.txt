@@ -1,1 +1,3 @@
-- Changed name from 'Handy Notes' to 'Quick Notes' to avoid confusion with the already popular addon with the same name
+- Added help command (/qn help) to show available QuickNotes commands
+- Made "/qn clear" command also delete notes from view, not only from database
+- Made "/qn" command a toggle of main windows visibility
