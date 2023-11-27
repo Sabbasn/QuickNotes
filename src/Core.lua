@@ -130,13 +130,21 @@ local function commandHandler(arg)
             note:SetShown(false)
         end
         print("|cffffcc00QuickNotes:|r Cleared all notes!")
+    elseif arg == "help" then
+        print("|cffffff00/qn - Toggles the QuickNotes window|r")
+        print("|cffffff00/qn clear - Clears all of the character's notes|r")
     else
-        MainFrame:Show()
+        if MainFrame:IsShown() then
+            MainFrame:Hide()
+        else
+            MainFrame:Show()
+        end
     end
 end
 
 SLASH_PHRASE1 = "/qn"
 SLASH_PHRASE2 = "/qn clear"
+SLASH_PHRASE3 = "/qn help"
 SlashCmdList['PHRASE'] = commandHandler
 
 -----------------------------------------------------------
