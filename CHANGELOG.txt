@@ -1,3 +1,1 @@
-- Added help command (/qn help) to show available QuickNotes commands
-- Made "/qn clear" command also delete notes from view, not only from database
-- Made "/qn" command a toggle of main windows visibility
+- Updated QuickNotes to support interface version 1.15.0
