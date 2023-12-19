@@ -3,8 +3,7 @@
 ## Title: Quick Notes
 ## Notes: A simple notebook to scribble down notes
 ## Author: Sabbas
-## SavedVariables: QuickNotesDB
-## SavedVariables: CharSettings
+## SavedVariables: QuickNotesDB, CharSettings
 ## SavedVariablesPerCharacter: CharNotesDB
 
 libs/embeds.xml
