@@ -9,12 +9,20 @@ MainFrame:SetScript("OnEvent", function(self, event, arg1)
         if CharNotesDB == nil then
             CharNotesDB = {}
         else
-            foreach(CharNotesDB, function (key, value)
+            foreach(CharNotesDB, function(key, value)
                 AddNote(value, false)
             end)
         end
         if QuickNotesDB == nil then
             QuickNotesDB = {}
+        end
+        if CharSettings == nil then
+            CharSettings = {
+                ["visible"] = true
+            }
+        end
+        if not CharSettings["visible"] then
+            MainFrame:Hide()
         end
         CreateMinimapButton()
     end
@@ -59,7 +67,7 @@ MainFrame.inputField = CreateFrame("EditBox", nil, MainFrame, "InputBoxTemplate"
 MainFrame.inputField:SetPoint("TOPLEFT", MainFrame, 15, -30)
 MainFrame.inputField:SetResizable(true)
 local mainFrameWidth = MainFrame:GetWidth()
-MainFrame.inputField:SetSize(mainFrameWidth*0.75, 30)
+MainFrame.inputField:SetSize(mainFrameWidth * 0.75, 30)
 MainFrame.inputField:SetAutoFocus(false)
 MainFrame.inputField:SetMaxLetters(40)
 
@@ -85,17 +93,17 @@ function AddNote(string, save)
     local noteField = MainFrame.noteField
     table.insert(notes, MainFrame.noteField)
 
-    MainFrame.noteField:SetScript("OnClick", function (self)
+    MainFrame.noteField:SetScript("OnClick", function(self)
         noteField:SetShown(false)
         self:SetShown(false)
-        foreach(CharNotesDB, function (key, value)
+        foreach(CharNotesDB, function(key, value)
             if value == noteField:GetText() then
                 table.remove(CharNotesDB, tonumber(key))
             end
         end)
         local shouldMove = false
         y_offset_surplus = y_offset_surplus - 20
-        table.foreach(notes, function (key, value)
+        table.foreach(notes, function(key, value)
             if shouldMove then
                 local _, _, _, _, oldY = value:GetPoint(1)
                 value:SetPoint("TOPLEFT", child, "TOPLEFT", 0, oldY + 20)
@@ -108,7 +116,7 @@ function AddNote(string, save)
 end
 
 -- Add note by pressing Enter
-MainFrame.inputField:SetScript("OnEnterPressed", function ()
+MainFrame.inputField:SetScript("OnEnterPressed", function()
     AddNote(MainFrame.inputField:GetText(), true)
 end)
 
@@ -136,8 +144,10 @@ local function commandHandler(arg)
     else
         if MainFrame:IsShown() then
             MainFrame:Hide()
+            CharSettings["visible"] = false
         else
             MainFrame:Show()
+            CharSettings["visible"] = true
         end
     end
 end
@@ -155,13 +165,13 @@ resizeButton:SetPoint("BOTTOMRIGHT")
 resizeButton:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
 resizeButton:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
 resizeButton:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
- 
+
 resizeButton:SetScript("OnMouseDown", function(self, button)
     MainFrame:StartSizing("BOTTOMRIGHT")
     MainFrame.inputField:StartSizing("BOTTOMRIGHT")
     MainFrame:SetUserPlaced(true)
 end)
- 
+
 resizeButton:SetScript("OnMouseUp", function(self, button)
     MainFrame.inputField:StopMovingOrSizing()
     MainFrame:StopMovingOrSizing()
@@ -179,8 +189,10 @@ function CreateMinimapButton()
         OnClick = function(self, button)
             if (MainFrame:IsShown()) then
                 MainFrame:Hide()
+                CharSettings["visible"] = false
             else
                 MainFrame:Show()
+                CharSettings["visible"] = true
             end
         end,
         OnTooltipShow = function(tooltip)

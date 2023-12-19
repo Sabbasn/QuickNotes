@@ -1,1 +1,2 @@
-- Updated QuickNotes to support interface version 1.15.0
+- Quick Notes' visibility toggle option is now saved between UI-reloads
+-

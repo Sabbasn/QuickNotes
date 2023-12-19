@@ -4,6 +4,7 @@
 ## Notes: A simple notebook to scribble down notes
 ## Author: Sabbas
 ## SavedVariables: QuickNotesDB
+## SavedVariables: CharSettings
 ## SavedVariablesPerCharacter: CharNotesDB
 
 libs/embeds.xml
