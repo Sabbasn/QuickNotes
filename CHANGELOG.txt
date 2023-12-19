@@ -1,2 +1,2 @@
 - Quick Notes' visibility toggle option is now saved between UI-reloads
--
+- Changed init message color

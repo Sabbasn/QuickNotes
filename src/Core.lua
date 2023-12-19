@@ -5,7 +5,7 @@ MainFrame:RegisterEvent("ADDON_LOADED")
 -- Load Databases
 MainFrame:SetScript("OnEvent", function(self, event, arg1)
     if event == "ADDON_LOADED" and arg1 == "QuickNotes" then
-        print("QuickNotes loaded!")
+        print("|cffffcc00QuickNotes|r loaded!")
         if CharNotesDB == nil then
             CharNotesDB = {}
         else
