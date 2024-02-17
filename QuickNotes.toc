@@ -7,4 +7,4 @@
 ## SavedVariablesPerCharacter: CharNotesDB
 
 libs/embeds.xml
-src/Core.lua
+src/Manifest.xml

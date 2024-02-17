@@ -1,0 +1,8 @@
+<!-- Source directory manifest-->
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+  <Script file="Objects.lua" />
+
+  <Include file="Components\Manifest.xml" />
+  <Include file="Init\Manifest.xml" />
+  <Include file="SlashCmd\Manifest.xml" />
+</Ui>
