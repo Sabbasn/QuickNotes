@@ -3,6 +3,7 @@
   <Script file="Objects.lua" />
 
   <Include file="Components\Manifest.xml" />
+  <Include file="Database\Manifest.xml" />
   <Include file="Init\Manifest.xml" />
   <Include file="SlashCmd\Manifest.xml" />
 </Ui>

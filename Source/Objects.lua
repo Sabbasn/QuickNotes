@@ -1,7 +1,8 @@
 QuickNotes = {
+  Database = {},
   SlashCmd = {},
   Interface = {
-    Main = {},
+    MainFrame = {},
     MinimapButton = {},
   }
 }

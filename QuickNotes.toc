@@ -6,5 +6,5 @@
 ## SavedVariables: QuickNotesDB, CharSettings
 ## SavedVariablesPerCharacter: CharNotesDB
 
-libs/embeds.xml
-src/Manifest.xml
+Libs/embeds.xml
+Source/Manifest.xml

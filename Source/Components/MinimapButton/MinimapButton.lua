@@ -6,11 +6,11 @@ function QuickNotes.Interface.MinimapButton.Initialize()
     type = "launcher",
     icon = "Interface\\AddOns\\QuickNotes\\Images\\QuickNotesIcon.tga",
     OnClick = function(self, button)
-      if (MainFrame:IsShown()) then
-        QuickNotes.Interface.Main:Hide()
+      if (QuickNotes.Interface.MainFrame:IsShown()) then
+        QuickNotes.Interface.MainFrame:Hide()
         CharSettings["visible"] = false
       else
-        QuickNotes.Interface.Main:Show()
+        QuickNotes.Interface.MainFrame:Show()
         CharSettings["visible"] = true
       end
     end,

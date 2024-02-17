@@ -1,43 +1,21 @@
--- Load Databases
-MainFrame = CreateFrame("Frame", "QN_MainFrame", UIParent)
-QuickNotes.Interface.Main = MainFrame
+-- Intialize MainFrame
+local MainFrame = CreateFrame("Frame", "QN_MainFrame", UIParent)
+QuickNotes.Interface.MainFrame = MainFrame
 MainFrame:RegisterEvent("ADDON_LOADED")
 
--- Load Databases
+-- Initialize Services
 MainFrame:SetScript("OnEvent", function(self, event, arg1)
     if event == "ADDON_LOADED" and arg1 == "QuickNotes" then
-        print("|cffffcc00QuickNotes|r loaded!")
-        if CharNotesDB == nil then
-            CharNotesDB = {}
-        else
-            foreach(CharNotesDB, function(key, value)
-                AddNote(value, false)
-            end)
-        end
-        if QuickNotesDB == nil then
-            QuickNotesDB = {}
-        end
-        if CharSettings == nil then
-            CharSettings = {
-                ["visible"] = true
-            }
-        end
-        if not CharSettings["visible"] then
-            MainFrame:Hide()
-        end
+        QuickNotes.Database.Initialize()
         QuickNotes.SlashCmd.Initialize()
         QuickNotes.Interface.MinimapButton.Initialize()
+        print("|cffffcc00QuickNotes|r loaded!")
     end
 end)
 
--- Main Frame Background
+-- Various settings for the MainFrame
 MainFrame:SetSize(225, 300)
 MainFrame:SetPoint("CENTER")
-MainFrame.Background = MainFrame:CreateTexture("QN_Background", "BACKGROUND")
-MainFrame.Background:SetAllPoints(true)
-MainFrame.Background:SetColorTexture(0, 0, 0, 0.3)
-
--- Enable dragging and resizing of main frame
 MainFrame:SetMovable(true)
 MainFrame:EnableMouse(true)
 MainFrame:SetResizable(true)
@@ -46,6 +24,11 @@ MainFrame:SetResizeBounds(225, 200, 225, 600)
 MainFrame:RegisterForDrag("LeftButton")
 MainFrame:SetScript("OnDragStart", MainFrame.StartMoving)
 MainFrame:SetScript("OnDragStop", MainFrame.StopMovingOrSizing)
+
+-- Main Frame Background
+MainFrame.Background = MainFrame:CreateTexture("QN_Background", "BACKGROUND")
+MainFrame.Background:SetAllPoints(true)
+MainFrame.Background:SetColorTexture(0, 0, 0, 0.3)
 
 -- Scroll frame
 MainFrame.ScrollFrame = CreateFrame("ScrollFrame", nil, MainFrame, "UIPanelScrollFrameTemplate")
@@ -73,6 +56,11 @@ local mainFrameWidth = MainFrame:GetWidth()
 MainFrame.InputField:SetSize(mainFrameWidth * 0.75, 30)
 MainFrame.InputField:SetAutoFocus(false)
 MainFrame.InputField:SetMaxLetters(40)
+
+-- Add note by pressing Enter
+MainFrame.InputField:SetScript("OnEnterPressed", function()
+    AddNote(MainFrame.InputField:GetText(), true)
+end)
 
 local notes = {}
 local y_offset_surplus = 0
@@ -118,11 +106,6 @@ function AddNote(string, save)
     end)
 end
 
--- Add note by pressing Enter
-MainFrame.InputField:SetScript("OnEnterPressed", function()
-    AddNote(MainFrame.InputField:GetText(), true)
-end)
-
 -- Add button for player input
 MainFrame.AddButton = CreateFrame("Button", nil, MainFrame, "GameMenuButtonTemplate")
 MainFrame.AddButton:SetPoint("TOPRIGHT", MainFrame, -10, -30)
@@ -133,11 +116,6 @@ MainFrame.AddButton:SetScript("OnClick", function()
     AddNote(MainFrame.InputField:GetText(), true)
 end)
 
-
-
-
-
------------------------------------------------------------
 -- Resize Button
 local resizeButton = CreateFrame("Button", nil, MainFrame)
 resizeButton:SetSize(16, 16)

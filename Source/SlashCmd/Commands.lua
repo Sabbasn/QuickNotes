@@ -13,9 +13,9 @@ function QuickNotes.SlashCmd.Help()
 end
 
 function QuickNotes.SlashCmd.ToggleVisibility()
-  if (QuickNotes.Interface.Main:IsShown()) then
-    QuickNotes.Interface.Main:Hide()
+  if (QuickNotes.Interface.MainFrame:IsShown()) then
+    QuickNotes.Interface.MainFrame:Hide()
   else
-    QuickNotes.Interface.Main:Show()
+    QuickNotes.Interface.MainFrame:Show()
   end
 end
