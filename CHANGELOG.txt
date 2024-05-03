@@ -1,2 +1,1 @@
-- Made Quick Notes compatible with Season of Discovery Phase 2
-- Addon frame is now clamped inside the screen
+- Update to interface version 1.15.2
