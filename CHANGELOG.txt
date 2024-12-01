@@ -1,3 +1,4 @@
-- Update to interface version 1.15.5
+- (Vanilla) Updated to interface version 1.15.5
 - Update available commands
 - Added support for Cataclysm
+- Added support for Retail

@@ -1,0 +1,3 @@
+## Interface: 00000
+## Title: QuickNotes - game client not supported!
+## Notes: This game client is not supported.

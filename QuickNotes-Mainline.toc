@@ -1,0 +1,10 @@
+## Interface: 110005
+## Version: 1.1.8
+## Title: Quick Notes
+## Notes: A simple notebook to scribble down notes
+## Author: Sabbas
+## SavedVariables: QuickNotesDB, CharSettings
+## SavedVariablesPerCharacter: CharNotesDB
+
+Libs/Embeds.xml
+Source/Manifest.xml
