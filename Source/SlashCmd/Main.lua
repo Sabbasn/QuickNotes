@@ -15,25 +15,10 @@ function QuickNotes.SlashCmd.CommandHandler(input)
     QuickNotes.SlashCmd:Help()
   else
     local handler = SLASH_COMMANDS[input]
+    if handler == nil then
+      print("|cffffcc00QuickNotes:|r '" .. input .. "' is not recognised as a command!")
+      return
+    end
     handler()
   end
 end
-
--- if arg == "clear" then
---   table.wipe(CharNotesDB)
---   for _, note in pairs(notes) do
---     note:SetShown(false)
---   end
---   print("|cffffcc00QuickNotes:|r Cleared all notes!")
--- elseif arg == "help" then
---   print("|cffffff00/qn - Toggles the QuickNotes window|r")
---   print("|cffffff00/qn clear - Clears all of the character's notes|r")
--- else
---   if MainFrame:IsShown() then
---     MainFrame:Hide()
---     CharSettings["visible"] = false
---   else
---     MainFrame:Show()
---     CharSettings["visible"] = true
---   end
--- end

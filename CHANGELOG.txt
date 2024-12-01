@@ -1,1 +1,3 @@
-- Update to interface version 1.15.2
+- Update to interface version 1.15.5
+- Update available commands
+- Added support for Cataclysm

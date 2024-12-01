@@ -1,6 +1,5 @@
 local SLASH_COMMANDS_DESCRIPTION = {
   { commands = "help",   description = "Shows a list over all available commands." },
-  { commands = "clear",  description = "Clears all of the character's notes." },
   { commands = "toggle", description = "Toggles the visibility of the notepad." }
 }
 
