@@ -2,6 +2,8 @@
 local MainFrame = CreateFrame("Frame", "QN_MainFrame", UIParent)
 QuickNotes.Interface.MainFrame = MainFrame
 MainFrame:RegisterEvent("ADDON_LOADED")
+MainFrame:RegisterEvent("PLAYER_UPDATE_RESTING")
+MainFrame:RegisterEvent("PLAYER_STARTED_LOOKING")
 
 -- Initialize Services
 MainFrame:SetScript("OnEvent", function(self, event, arg1)
@@ -11,6 +13,21 @@ MainFrame:SetScript("OnEvent", function(self, event, arg1)
         QuickNotes.Interface.MinimapButton.Initialize()
         print("|cffffcc00QuickNotes|r loaded!")
     end
+    if event == "PLAYER_UPDATE_RESTING" then
+        if IsResting() then
+            MainFrame.HighlightBorderAnimGroup:Play()
+        else
+            MainFrame.HighlightBorderAnimGroup:Stop()
+        end
+    end
+    if event == "PLAYER_STARTED_LOOKING" then
+        MainFrame.InputField:ClearFocus()
+    end
+end)
+
+-- Stop Glow Animation
+MainFrame:SetScript("OnEnter", function ()
+    MainFrame.HighlightBorderAnimGroup:Stop()
 end)
 
 -- Various settings for the MainFrame
@@ -27,8 +44,27 @@ MainFrame:SetScript("OnDragStop", MainFrame.StopMovingOrSizing)
 
 -- Main Frame Background
 MainFrame.Background = MainFrame:CreateTexture("QN_Background", "BACKGROUND")
-MainFrame.Background:SetAllPoints(true)
+MainFrame.Background:SetAllPoints()
 MainFrame.Background:SetColorTexture(0, 0, 0, 0.3)
+-- MainFrame.Background:SetAtlas("warboard-parchment")
+
+-- Highlight
+MainFrame.HighlightBorder = MainFrame:CreateTexture("QN_HighlightBorder", "BORDER", nil)
+MainFrame.HighlightBorder:SetAllPoints()
+MainFrame.HighlightBorder:SetAtlas("communities-create-avatar-border-selected")
+MainFrame.HighlightBorder:SetAlpha(0)
+MainFrame.HighlightBorderAnimGroup = MainFrame.HighlightBorder:CreateAnimationGroup()
+local HighlightBorderFadeIn = MainFrame.HighlightBorderAnimGroup:CreateAnimation("Alpha")
+local HighlightBorderFadeOut = MainFrame.HighlightBorderAnimGroup:CreateAnimation("Alpha")
+HighlightBorderFadeIn:SetDuration(1)
+HighlightBorderFadeIn:SetFromAlpha(0)
+HighlightBorderFadeIn:SetToAlpha(1)
+HighlightBorderFadeIn:SetOrder(1)
+HighlightBorderFadeOut:SetDuration(1)
+HighlightBorderFadeOut:SetFromAlpha(1)
+HighlightBorderFadeOut:SetToAlpha(0)
+HighlightBorderFadeOut:SetOrder(2)
+MainFrame.HighlightBorderAnimGroup:SetLooping("REPEAT")
 
 -- Scroll frame
 MainFrame.ScrollFrame = CreateFrame("ScrollFrame", nil, MainFrame, "UIPanelScrollFrameTemplate")
@@ -94,7 +130,7 @@ function AddNote(string, save)
         end)
         local shouldMove = false
         y_offset_surplus = y_offset_surplus - 20
-        table.foreach(notes, function(key, value)
+        for _, value in pairs(notes) do
             if shouldMove then
                 local _, _, _, _, oldY = value:GetPoint(1)
                 value:SetPoint("TOPLEFT", child, "TOPLEFT", 0, oldY + 20)
@@ -102,7 +138,7 @@ function AddNote(string, save)
             if value == noteField then
                 shouldMove = true
             end
-        end)
+        end
     end)
 end
 
@@ -118,7 +154,7 @@ end)
 
 -- Resize Button
 local resizeButton = CreateFrame("Button", nil, MainFrame)
-resizeButton:SetSize(16, 16)
+resizeButton:SetSize(12, 12)
 resizeButton:SetPoint("BOTTOMRIGHT")
 resizeButton:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
 resizeButton:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
