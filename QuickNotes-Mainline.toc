@@ -1,5 +1,5 @@
-## Interface: 110005
-## Version: 1.1.8
+## Interface: 110007
+## Version: 1.2.0
 ## Title: Quick Notes
 ## Notes: A simple notebook to scribble down notes
 ## Author: Sabbas
