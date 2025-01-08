@@ -88,10 +88,30 @@ MainFrame.Title:SetText("Quick Notes")
 MainFrame.InputField = CreateFrame("EditBox", nil, MainFrame, "InputBoxTemplate")
 MainFrame.InputField:SetPoint("TOPLEFT", MainFrame, 15, -30)
 MainFrame.InputField:SetResizable(true)
+MainFrame.InputField:SetHyperlinksEnabled(true)
 local mainFrameWidth = MainFrame:GetWidth()
 MainFrame.InputField:SetSize(mainFrameWidth * 0.75, 30)
 MainFrame.InputField:SetAutoFocus(false)
 MainFrame.InputField:SetMaxLetters(40)
+
+-- Credit: Phanx from https://www.wowinterface.com/forums/showthread.php?t=45297
+hooksecurefunc("ChatEdit_InsertLink", function(link)
+    if MainFrame.InputField:IsVisible() and MainFrame.InputField:HasFocus() then
+        StackSplitFrame:Hide()
+        MainFrame.InputField:Insert(link)
+    end
+end)
+
+-- Credit: Fizzlemizz from https://www.wowinterface.com/forums/showthread.php?t=59562
+MainFrame.InputField:SetScript("OnHyperlinkEnter", function(self, link)
+    GameTooltip:SetOwner(self, "ANCHOR_CURSOR_RIGHT")
+    GameTooltip:SetHyperlink(link)
+    GameTooltip:Show()
+end)
+
+MainFrame.InputField:SetScript("OnHyperlinkLeave", function(self)
+    GameTooltip:Hide()
+end)
 
 -- Add note by pressing Enter
 MainFrame.InputField:SetScript("OnEnterPressed", function()
@@ -101,17 +121,41 @@ end)
 local notes = {}
 local y_offset_surplus = 0
 
+-- Removes specified note from the frame
+function RemoveNote(note)
+    note:SetShown(false)
+    foreach(CharNotesDB, function(key, value)
+        if value == note:GetText() then
+            table.remove(CharNotesDB, tonumber(key))
+        end
+    end)
+    local shouldMove = false
+    y_offset_surplus = y_offset_surplus - 20
+    for _, value in pairs(notes) do
+        if shouldMove then
+            local _, _, _, _, oldY = value:GetPoint(1)
+            value:SetPoint("TOPLEFT", child, "TOPLEFT", 0, oldY + 20)
+        end
+        if value == note then
+            shouldMove = true
+        end
+    end
+end
+
 -- Add a note to the frame
 function AddNote(string, save)
-    if #string < 1 then return end
+    if #string < 1 then
+        MainFrame.InputField:ClearFocus()
+        return
+     end
 
     if save then table.insert(CharNotesDB, string) end
-
     MainFrame.ScrollFrame:SetClipsChildren(true)
     MainFrame.NoteField = CreateFrame("Button", nil, child)
     MainFrame.NoteField:SetPoint("TOPLEFT", child, 0, 0 - y_offset_surplus)
     y_offset_surplus = y_offset_surplus + 20
     MainFrame.NoteField:SetText(string)
+    MainFrame.NoteField:SetHyperlinksEnabled(true)
     MainFrame.NoteField:SetNormalFontObject("GameFontWhite")
     MainFrame.NoteField:SetSize(225, 30)
     MainFrame.InputField:ClearFocus()
@@ -120,33 +164,32 @@ function AddNote(string, save)
     local noteField = MainFrame.NoteField
     table.insert(notes, MainFrame.NoteField)
 
-    MainFrame.NoteField:SetScript("OnEnter", function (self)
+     noteField:SetScript("OnHyperlinkClick", function (self)
+        RemoveNote(self)
+     end)
+
+    noteField:SetScript("OnHyperlinkEnter", function(self, link)
+        noteField:SetAlpha(0.5)
+        GameTooltip:SetOwner(self, "ANCHOR_CURSOR_RIGHT")
+        GameTooltip:SetHyperlink(link)
+        GameTooltip:Show()
+    end)
+
+    noteField:SetScript("OnHyperlinkLeave", function(self)
+        noteField:SetAlpha(1)
+        GameTooltip:Hide()
+    end)
+
+    noteField:SetScript("OnEnter", function (self)
         noteField:SetAlpha(0.5)
     end)
 
-    MainFrame.NoteField:SetScript("OnLeave", function ()
+    noteField:SetScript("OnLeave", function ()
         noteField:SetAlpha(1)
     end)
 
-    MainFrame.NoteField:SetScript("OnClick", function(self)
-        noteField:SetShown(false)
-        self:SetShown(false)
-        foreach(CharNotesDB, function(key, value)
-            if value == noteField:GetText() then
-                table.remove(CharNotesDB, tonumber(key))
-            end
-        end)
-        local shouldMove = false
-        y_offset_surplus = y_offset_surplus - 20
-        for _, value in pairs(notes) do
-            if shouldMove then
-                local _, _, _, _, oldY = value:GetPoint(1)
-                value:SetPoint("TOPLEFT", child, "TOPLEFT", 0, oldY + 20)
-            end
-            if value == noteField then
-                shouldMove = true
-            end
-        end
+    noteField:SetScript("OnClick", function (self)
+        RemoveNote(self)
     end)
 end
 

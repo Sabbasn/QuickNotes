@@ -1,3 +1,5 @@
+- Added a highlight notification around the notepad when entering rested zone
+- Added hyperlink support so that you can save item and spell links in your notepad
 - Gave notes a hover effect to make it more obvious which note you are targeting
-- Added highlight notification around the notepad when entering rested zone
-- Input box will now automatically clear focus when player moves camera
+- Input box will now automatically clear focus when you move the camera
+- Pressing enter while the field is empty will now clear focus
