@@ -1,2 +1,3 @@
+- Gave notes a hover effect to make it more obvious which note you are targeting
 - Added highlight notification around the notepad when entering rested zone
 - Input box will now automatically clear focus when player moves camera

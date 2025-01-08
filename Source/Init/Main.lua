@@ -120,6 +120,14 @@ function AddNote(string, save)
     local noteField = MainFrame.NoteField
     table.insert(notes, MainFrame.NoteField)
 
+    MainFrame.NoteField:SetScript("OnEnter", function (self)
+        noteField:SetAlpha(0.5)
+    end)
+
+    MainFrame.NoteField:SetScript("OnLeave", function ()
+        noteField:SetAlpha(1)
+    end)
+
     MainFrame.NoteField:SetScript("OnClick", function(self)
         noteField:SetShown(false)
         self:SetShown(false)
