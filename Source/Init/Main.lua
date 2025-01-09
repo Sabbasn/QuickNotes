@@ -14,7 +14,7 @@ MainFrame:SetScript("OnEvent", function(self, event, arg1)
         print("|cffffcc00QuickNotes|r loaded!")
     end
     if event == "PLAYER_UPDATE_RESTING" then
-        if IsResting() then
+        if IsResting() and #CharNotesDB > 0  then
             MainFrame.HighlightBorderAnimGroup:Play()
         else
             MainFrame.HighlightBorderAnimGroup:Stop()
@@ -97,7 +97,6 @@ MainFrame.InputField:SetMaxLetters(40)
 -- Credit: Phanx from https://www.wowinterface.com/forums/showthread.php?t=45297
 hooksecurefunc("ChatEdit_InsertLink", function(link)
     if MainFrame.InputField:IsVisible() and MainFrame.InputField:HasFocus() then
-        StackSplitFrame:Hide()
         MainFrame.InputField:Insert(link)
     end
 end)
@@ -107,6 +106,11 @@ MainFrame.InputField:SetScript("OnHyperlinkEnter", function(self, link)
     GameTooltip:SetOwner(self, "ANCHOR_CURSOR_RIGHT")
     GameTooltip:SetHyperlink(link)
     GameTooltip:Show()
+end)
+
+-- Hide StackSplitFrame when text changes to prevent it showing when entering hyperlinks
+MainFrame.InputField:SetScript("OnTextChanged", function ()
+    StackSplitFrame:Hide()
 end)
 
 MainFrame.InputField:SetScript("OnHyperlinkLeave", function(self)
