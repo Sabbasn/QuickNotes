@@ -1,4 +1,4 @@
-## Interface: 110007
+## Interface: 110100
 ## Version: 1.2.0
 ## Title: Quick Notes
 ## Notes: A simple notebook to scribble down notes
