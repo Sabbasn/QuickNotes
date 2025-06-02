@@ -12,6 +12,9 @@ MainFrame:SetScript("OnEvent", function(self, event, arg1)
         QuickNotes.SlashCmd.Initialize()
         QuickNotes.Interface.MinimapButton.Initialize()
         print("|cffffcc00QuickNotes|r loaded!")
+        if CharSettings["minimized"] then
+            MainFrame.Minimize()
+        end
     end
     if event == "PLAYER_UPDATE_RESTING" then
         if IsResting() and #CharNotesDB > 0  then
@@ -84,38 +87,50 @@ MainFrame.Title:SetScale(1.25)
 MainFrame.Title:SetPoint("TOP", MainFrame, 0, -6)
 MainFrame.Title:SetText("Quick Notes")
 
-function QuickNotes.Interface.MainFrame.Minimize()
+function MainFrame.Minimize()
+    MainFrame:SetSize(225, 30)
+    MainFrame:SetResizable(false)
+    MainFrame.InputField:Hide()
+    MainFrame.AddButton:Hide()
+    MainFrame.NoteField:Hide()
+    MainFrame.ScrollFrame:Hide()
+    MainFrame.Header:SetText("+")
+    CharSettings["minimized"] = true
+end
+
+function MainFrame.Maximize()
+    MainFrame:SetResizable(true)
+    MainFrame.InputField:Show()
+    MainFrame.AddButton:Show()
+    MainFrame.NoteField:Show()
+    MainFrame.ScrollFrame:Show()
+    MainFrame.Header:SetText("-")
+    CharSettings["minimized"] = false
+end
+
+function MainFrame.ToggleMinimize()
     if not CharSettings["minimized"] then
-        print("MINIMIZING")
         local width, height = MainFrame:GetSize()
         CharSettings["frameSize"] = {width, height}
-        MainFrame:SetSize(225, 30)
-        MainFrame:SetResizable(false)
-        MainFrame.InputField:Hide()
-        MainFrame.AddButton:Hide()
-        MainFrame.NoteField:Hide()
-        MainFrame.ScrollFrame:Hide()
-        MainFrame.Header:SetText("+")
-        CharSettings["minimized"] = true
+        MainFrame.Minimize()
     else
-        print("MAXIMIZING")
-        MainFrame:SetSize(unpack(CharSettings["frameSize"]))
-        MainFrame:SetResizable(true)
-        MainFrame.InputField:Show()
-        MainFrame.AddButton:Show()
-        MainFrame.NoteField:Show()
-        MainFrame.ScrollFrame:Show()
-        MainFrame.Header:SetText("-")
+        if CharSettings["frameSize"] == nil then
+            MainFrame:SetSize(225, 300)
+        else
+            MainFrame:SetSize(unpack(CharSettings["frameSize"]))
+        end
+        MainFrame.Maximize()
         CharSettings["minimized"] = false
     end
 end
-MainFrame.Header = CreateFrame("Button", nil, MainFrame, "BackdropTemplate")
-MainFrame.Header:SetPoint("TOPRIGHT", MainFrame, 0, 0)
-MainFrame.Header:SetText("-")
-MainFrame.Header:SetSize(30, 30)
-MainFrame.Header:SetNormalFontObject("GameFontNormalLarge")
-MainFrame.Header:SetScript("OnClick", function ()
-    QuickNotes.Interface.MainFrame.Minimize()
+
+MainFrame.ToggleMinimizeButton = CreateFrame("Button", nil, MainFrame, "BackdropTemplate")
+MainFrame.ToggleMinimizeButton:SetPoint("TOPRIGHT", MainFrame, 0, 0)
+MainFrame.ToggleMinimizeButton:SetText("-")
+MainFrame.ToggleMinimizeButton:SetSize(30, 30)
+MainFrame.ToggleMinimizeButton:SetNormalFontObject("GameFontNormalLarge")
+MainFrame.ToggleMinimizeButton:SetScript("OnClick", function ()
+    MainFrame.ToggleMinimize()
 end)
 
 -- Player input
