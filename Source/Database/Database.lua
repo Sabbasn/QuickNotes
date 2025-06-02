@@ -11,7 +11,9 @@ function QuickNotes.Database.Initialize()
   end
   if CharSettings == nil then
     CharSettings = {
-      ["visible"] = true
+      ["visible"] = true,
+      ["minimized"] = true,
+      ["frameSize"] = {225, 300}
     }
   end
   if not CharSettings["visible"] then

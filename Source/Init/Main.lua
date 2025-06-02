@@ -37,7 +37,7 @@ MainFrame:SetMovable(true)
 MainFrame:EnableMouse(true)
 MainFrame:SetResizable(true)
 MainFrame:SetClampedToScreen(true)
-MainFrame:SetResizeBounds(225, 200, 225, 600)
+MainFrame:SetResizeBounds(225, 100, 225, 600)
 MainFrame:RegisterForDrag("LeftButton")
 MainFrame:SetScript("OnDragStart", MainFrame.StartMoving)
 MainFrame:SetScript("OnDragStop", MainFrame.StopMovingOrSizing)
@@ -83,6 +83,40 @@ MainFrame.Title:SetTextColor(1, 1, 0, 1)
 MainFrame.Title:SetScale(1.25)
 MainFrame.Title:SetPoint("TOP", MainFrame, 0, -6)
 MainFrame.Title:SetText("Quick Notes")
+
+function QuickNotes.Interface.MainFrame.Minimize()
+    if not CharSettings["minimized"] then
+        print("MINIMIZING")
+        local width, height = MainFrame:GetSize()
+        CharSettings["frameSize"] = {width, height}
+        MainFrame:SetSize(225, 30)
+        MainFrame:SetResizable(false)
+        MainFrame.InputField:Hide()
+        MainFrame.AddButton:Hide()
+        MainFrame.NoteField:Hide()
+        MainFrame.ScrollFrame:Hide()
+        MainFrame.Header:SetText("+")
+        CharSettings["minimized"] = true
+    else
+        print("MAXIMIZING")
+        MainFrame:SetSize(unpack(CharSettings["frameSize"]))
+        MainFrame:SetResizable(true)
+        MainFrame.InputField:Show()
+        MainFrame.AddButton:Show()
+        MainFrame.NoteField:Show()
+        MainFrame.ScrollFrame:Show()
+        MainFrame.Header:SetText("-")
+        CharSettings["minimized"] = false
+    end
+end
+MainFrame.Header = CreateFrame("Button", nil, MainFrame, "BackdropTemplate")
+MainFrame.Header:SetPoint("TOPRIGHT", MainFrame, 0, 0)
+MainFrame.Header:SetText("-")
+MainFrame.Header:SetSize(30, 30)
+MainFrame.Header:SetNormalFontObject("GameFontNormalLarge")
+MainFrame.Header:SetScript("OnClick", function ()
+    QuickNotes.Interface.MainFrame.Minimize()
+end)
 
 -- Player input
 MainFrame.InputField = CreateFrame("EditBox", nil, MainFrame, "InputBoxTemplate")

@@ -1,1 +1,2 @@
-- Update interface version
+- Added minimize button
+- Updated interface version
