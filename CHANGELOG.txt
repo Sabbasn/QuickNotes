@@ -1,2 +1,2 @@
-- Added minimize button
-- Updated interface version
+- Fixed a bug where the minimize button would not update text on minimizing/maximizing the window. This would also throw a lua error.
+(thanks to user Danqna for pointing this bug out!)

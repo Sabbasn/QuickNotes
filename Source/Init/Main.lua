@@ -94,7 +94,7 @@ function MainFrame.Minimize()
     MainFrame.AddButton:Hide()
     MainFrame.NoteField:Hide()
     MainFrame.ScrollFrame:Hide()
-    MainFrame.Header:SetText("+")
+    MainFrame.ToggleMinimizeButton:SetText("+")
     CharSettings["minimized"] = true
 end
 
@@ -104,7 +104,7 @@ function MainFrame.Maximize()
     MainFrame.AddButton:Show()
     MainFrame.NoteField:Show()
     MainFrame.ScrollFrame:Show()
-    MainFrame.Header:SetText("-")
+    MainFrame.ToggleMinimizeButton:SetText("-")
     CharSettings["minimized"] = false
 end
 
