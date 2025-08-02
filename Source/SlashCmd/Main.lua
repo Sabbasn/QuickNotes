@@ -7,7 +7,8 @@ end
 
 local SLASH_COMMANDS = {
   ["help"] = QuickNotes.SlashCmd.Help,
-  ["toggle"] = QuickNotes.SlashCmd.ToggleVisibility
+  ["toggle"] = QuickNotes.SlashCmd.ToggleVisibility,
+  ["reset"] = QuickNotes.SlashCmd.ResetSize,
 }
 
 function QuickNotes.SlashCmd.CommandHandler(input)

@@ -87,40 +87,39 @@ MainFrame.Title:SetScale(1.25)
 MainFrame.Title:SetPoint("TOP", MainFrame, 0, -6)
 MainFrame.Title:SetText("Quick Notes")
 
-function MainFrame.Minimize()
-    MainFrame:SetSize(225, 30)
-    MainFrame:SetResizable(false)
-    MainFrame.InputField:Hide()
-    MainFrame.AddButton:Hide()
-    MainFrame.NoteField:Hide()
-    MainFrame.ScrollFrame:Hide()
-    MainFrame.ToggleMinimizeButton:SetText("+")
+function MainFrame:Minimize()
+    local width, height = self:GetSize()
+    CharSettings["frameSize"] = {width, height}
+    self:SetSize(225, 30)
+    self:SetResizable(false)
+    self.InputField:Hide()
+    self.AddButton:Hide()
+    self.NoteField:Hide()
+    self.ScrollFrame:Hide()
+    self.ToggleMinimizeButton:SetText("+")
     CharSettings["minimized"] = true
 end
 
-function MainFrame.Maximize()
-    MainFrame:SetResizable(true)
-    MainFrame.InputField:Show()
-    MainFrame.AddButton:Show()
-    MainFrame.NoteField:Show()
-    MainFrame.ScrollFrame:Show()
-    MainFrame.ToggleMinimizeButton:SetText("-")
+function MainFrame:Maximize()
+    self:SetResizable(true)
+    self.InputField:Show()
+    self.AddButton:Show()
+    self.NoteField:Show()
+    self.ScrollFrame:Show()
+    self.ToggleMinimizeButton:SetText("-")
+    if CharSettings["frameSize"] == nil then
+        self:SetSize(225, 300)
+    else
+        self:SetSize(unpack(CharSettings["frameSize"]))
+    end
     CharSettings["minimized"] = false
 end
 
 function MainFrame.ToggleMinimize()
-    if not CharSettings["minimized"] then
-        local width, height = MainFrame:GetSize()
-        CharSettings["frameSize"] = {width, height}
-        MainFrame.Minimize()
+    if CharSettings["minimized"] == false then
+        MainFrame:Minimize()
     else
-        if CharSettings["frameSize"] == nil then
-            MainFrame:SetSize(225, 300)
-        else
-            MainFrame:SetSize(unpack(CharSettings["frameSize"]))
-        end
-        MainFrame.Maximize()
-        CharSettings["minimized"] = false
+        MainFrame:Maximize()
     end
 end
 
