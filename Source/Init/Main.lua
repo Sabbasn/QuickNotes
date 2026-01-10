@@ -13,7 +13,7 @@ MainFrame:SetScript("OnEvent", function(self, event, arg1)
         QuickNotes.Interface.MinimapButton.Initialize()
         print("|cffffcc00QuickNotes|r loaded!")
         if CharSettings["minimized"] then
-            MainFrame.Minimize()
+            MainFrame:Minimize()
         end
     end
     if event == "PLAYER_UPDATE_RESTING" then
@@ -94,7 +94,9 @@ function MainFrame:Minimize()
     self:SetResizable(false)
     self.InputField:Hide()
     self.AddButton:Hide()
-    self.NoteField:Hide()
+    if self.NoteField then
+        self.NoteField:Hide()
+    end
     self.ScrollFrame:Hide()
     self.ToggleMinimizeButton:SetText("+")
     CharSettings["minimized"] = true
@@ -104,7 +106,9 @@ function MainFrame:Maximize()
     self:SetResizable(true)
     self.InputField:Show()
     self.AddButton:Show()
-    self.NoteField:Show()
+    if self.NoteField then
+        self.NoteField:Show()
+    end
     self.ScrollFrame:Show()
     self.ToggleMinimizeButton:SetText("-")
     if CharSettings["frameSize"] == nil then

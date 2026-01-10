@@ -1,1 +1,2 @@
-- Added game client support for Mists of Pandaria
+- Fixed lua error on startup for classic game client
+- Updated interface versions
