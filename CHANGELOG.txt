@@ -1,2 +1,2 @@
 - Fixed lua error on startup for classic game client
-- Updated interface versions
+- Updated interface versions (with added support for TBC Anniversary Edition)
