@@ -18,7 +18,7 @@ function NotepadSettings:_InitializeButtons()
 	end)
 end
 
-	function NotepadSettings:_ResetToDefaults()
+function NotepadSettings:_ResetToDefaults()
 	-- Reset color to black
 	self.currentColor.r = 0
 	self.currentColor.g = 0

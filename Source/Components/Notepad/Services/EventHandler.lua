@@ -39,7 +39,7 @@ function Notepad:OnAddonLoaded()
 end
 
 function Notepad:OnPlayerRestingStateChanged()
-    if IsResting() and #self.notes > 0 then
+    if IsResting() and #self.notes > 0 and self.settings.enableHighlight then
         self.Frame.HighlightBorderAnimGroup:Play()
     else
         self.Frame.HighlightBorderAnimGroup:Stop()

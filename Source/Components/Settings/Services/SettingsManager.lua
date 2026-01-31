@@ -15,6 +15,8 @@ function NotepadSettings:SaveSettings()
 		b = self.currentColor.b
 	}
 	
+  CharSettings.notepadSettings.enableHighlight = self.enableHighlight
+
 	if self.Frame and self.Frame.OpacitySlider then
 		CharSettings.notepadSettings.backgroundOpacity = self.Frame.OpacitySlider:GetValue()
 	end
@@ -28,6 +30,11 @@ function NotepadSettings:LoadSettings()
 	if not CharSettings.notepadSettings then
 		CharSettings.notepadSettings = {}
 	end
+
+  if CharSettings.notepadSettings.enableHighlight ~= nil then
+    self.enableHighlight = CharSettings.notepadSettings.enableHighlight
+    self.Frame.HighlightToggle:SetChecked(self.enableHighlight)
+  end
 	
 	-- Load background color
 	if CharSettings.notepadSettings.backgroundColor then
@@ -58,14 +65,13 @@ function NotepadSettings:ApplyLoadedSettings()
 	end
   
 	-- Apply color and opacity to notepad background
-  print("Current Color:", self.currentColor.r, self.currentColor.g, self.currentColor.b)
 	if self.notepad and self.notepad.Frame and self.notepad.Frame.Background then
-    print("Setting background color and opacity...")
 		local r = self.currentColor.r or 0
 		local g = self.currentColor.g or 0
 		local b = self.currentColor.b or 0
 		local opacity = CharSettings.notepadSettings.backgroundOpacity or 0.3
 		self.notepad.Frame.Background:SetColorTexture(r, g, b, opacity)
 		self.notepad.backgroundOpacity = opacity
+    self.enableHighlight = CharSettings.notepadSettings.enableHighlight or false
 	end
 end
