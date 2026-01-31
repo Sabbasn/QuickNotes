@@ -35,8 +35,10 @@ function Notepad:_InitializeResizeButton()
 	self.Frame.ResizeButton:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
 
 	self.Frame.ResizeButton:SetScript("OnMouseDown", function(_, button)
-		self.Frame:StartSizing("BOTTOMRIGHT")
-		self.Frame:SetUserPlaced(true)
+		if (not self.isLocked) then
+			self.Frame:StartSizing("BOTTOMRIGHT")
+			self.Frame:SetUserPlaced(true)
+		end
 	end)
 
 	self.Frame.ResizeButton:SetScript("OnMouseUp", function(_, button)

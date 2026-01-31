@@ -45,12 +45,10 @@ end
 function Notepad:ToggleUILock(locked)
 	if locked then
 		self.isLocked = true
-		self.Frame:SetResizable(false)
 		self.Frame.LockButton:SetText("unlock")
 		self.Frame.ResizeButton:Hide()
 	else
 		self.isLocked = false
-		self.Frame:SetResizable(true)
 		self.Frame.LockButton:SetText("lock")
 		self.Frame.ResizeButton:Show()
 	end
