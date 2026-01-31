@@ -89,7 +89,7 @@ MainFrame.Title:SetText("Quick Notes")
 function MainFrame:Minimize()
     local width, height = self:GetSize()
     CharSettings["frameSize"] = {width, height}
-    self:SetSize(225, 30)
+    self:SetSize(width, 30)
     self:SetResizable(false)
     self.InputField:Hide()
     self.AddButton:Hide()
