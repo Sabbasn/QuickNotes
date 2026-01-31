@@ -1,72 +1,130 @@
--- Removes specified note from the frame
 function Notepad:RemoveNote(note)
-    note:SetShown(false)
-    foreach(CharNotesDB, function(key, value)
-        if value == note:GetText() then
-            table.remove(CharNotesDB, tonumber(key))
-        end
-    end)
-    local shouldMove = false
-    self.yOffsetSurplus = self.yOffsetSurplus - 20
-    for _, value in pairs(self.notes) do
-        if shouldMove then
-            local _, _, _, _, oldY = value:GetPoint(1)
-            value:SetPoint("TOPLEFT", self.Frame.ScrollFrame:GetScrollChild(), "TOPLEFT", 0, oldY + 20)
-        end
-        if value == note then
-            shouldMove = true
+    -- Remove note from saved variables
+    for i = #CharNotesDB, 1, -1 do
+        if CharNotesDB[i] == note.Text:GetText() then
+            table.remove(CharNotesDB, i)
+            break
         end
     end
+
+    -- Remove note from table
+    for i = #self.notes, 1, -1 do
+        if self.notes[i] == note then
+            table.remove(self.notes, i)
+            break
+        end
+    end
+
+    note:Hide()
+    note:SetParent(nil)
+
+    self:_ReanchorNotes()
 end
 
--- Add a note to the frame
-function Notepad:AddNote(string, save)
-	local notepadFrame = self.Frame
-    if #string < 1 then
-        self.Frame.InputField:ClearFocus()
+
+function Notepad:AddNote(text, save)
+    local frame = self.Frame
+
+    if #text < 1 then
+        frame.InputField:ClearFocus()
         return
-     end
+    end
 
-    if save then table.insert(CharNotesDB, string) end
-    notepadFrame.ScrollFrame:SetClipsChildren(true)
-    notepadFrame.NoteField = CreateFrame("Button", nil, notepadFrame.ScrollFrame:GetScrollChild())
-    notepadFrame.NoteField:SetPoint("TOPLEFT", notepadFrame.ScrollFrame:GetScrollChild(), 0, 0 - self.yOffsetSurplus)
-    self.yOffsetSurplus = self.yOffsetSurplus + 20
-    notepadFrame.NoteField:SetText(string)
-    notepadFrame.NoteField:SetHyperlinksEnabled(true)
-    notepadFrame.NoteField:SetNormalFontObject("GameFontWhite")
-    notepadFrame.NoteField:SetSize(225, 30)
-    notepadFrame.InputField:ClearFocus()
-    notepadFrame.InputField:SetText("")
+    if save then
+        table.insert(CharNotesDB, text)
+    end
 
-    local noteField = notepadFrame.NoteField
-    table.insert(self.notes, noteField)
+    local parent = frame.ScrollFrame:GetScrollChild()
 
-     noteField:SetScript("OnHyperlinkClick", function (_)
-        self:RemoveNote(noteField)
-     end)
+    local row = CreateFrame("Frame", nil, parent)
+    row:SetHeight(20)
 
-    noteField:SetScript("OnHyperlinkEnter", function(note, link)
-        note:SetAlpha(0.5)
-        GameTooltip:SetOwner(note, "ANCHOR_CURSOR_RIGHT")
-        GameTooltip:SetHyperlink(link)
-        GameTooltip:Show()
+    -- layout
+    local last = self.notes[#self.notes]
+
+    if last then
+        row:SetPoint("TOPLEFT",  last, "BOTTOMLEFT",  0, -4)
+        row:SetPoint("TOPRIGHT", last, "BOTTOMRIGHT", 0, -4)
+    else
+        row:SetPoint("TOPLEFT",  parent, "TOPLEFT",  0, 0)
+        row:SetPoint("TOPRIGHT", parent, "TOPRIGHT", 0, 0)
+    end
+
+    -- text
+    local fs = row:CreateFontString(nil, "ARTWORK", "GameFontWhite")
+    fs:SetPoint("TOPLEFT",  row, "TOPLEFT",  4, -2)
+    fs:SetPoint("TOPRIGHT", row, "TOPRIGHT", -4, -2)
+    fs:SetJustifyH("LEFT")
+    fs:SetJustifyV("TOP")
+    fs:SetWordWrap(true)
+    fs:SetText(text)
+
+    row.Text = fs
+
+    -- let the row grow with the text
+    row:SetHeight(fs:GetStringHeight() + 4)
+
+    frame.InputField:ClearFocus()
+    frame.InputField:SetText("")
+
+    table.insert(self.notes, row)
+
+    row:EnableMouse(true)
+
+    row:SetScript("OnEnter", function()
+        row:SetAlpha(0.7)
     end)
 
-    noteField:SetScript("OnHyperlinkLeave", function()
-        noteField:SetAlpha(1)
-        GameTooltip:Hide()
+    row:SetScript("OnLeave", function()
+        row:SetAlpha(1)
     end)
 
-    noteField:SetScript("OnEnter", function ()
-        noteField:SetAlpha(0.5)
+    row:SetScript("OnMouseDown", function()
+        self:RemoveNote(row)
     end)
 
-    noteField:SetScript("OnLeave", function ()
-        noteField:SetAlpha(1)
-    end)
+    self:_UpdateNotesLayout()
+end
 
-    noteField:SetScript("OnClick", function ()
-        self:RemoveNote(noteField)
-    end)
+function Notepad:_ReanchorNotes()
+    local parent = self.Frame.ScrollFrame:GetScrollChild()
+
+    local prev
+
+    for _, note in ipairs(self.notes) do
+        note:ClearAllPoints()
+
+        if prev then
+            note:SetPoint("TOPLEFT",  prev, "BOTTOMLEFT",  0, -4)
+            note:SetPoint("TOPRIGHT", prev, "BOTTOMRIGHT", 0, -4)
+        else
+            note:SetPoint("TOPLEFT",  parent, "TOPLEFT",  0, 0)
+            note:SetPoint("TOPRIGHT", parent, "TOPRIGHT", 0, 0)
+        end
+
+        prev = note
+    end
+
+    self:_UpdateNotesLayout()
+end
+
+
+function Notepad:_UpdateNotesLayout()
+    local child = self.Frame.ScrollFrame:GetScrollChild()
+
+    local last = self.notes[#self.notes]
+
+    if not last then
+        child:SetHeight(self.Frame.ScrollFrame:GetHeight())
+        return
+    end
+
+    local bottom = last:GetBottom()
+    local top = child:GetTop()
+
+    if not bottom or not top then return end
+
+    local contentHeight = top - bottom + 4
+
+    child:SetHeight(math.max(contentHeight, self.Frame.ScrollFrame:GetHeight()))
 end
