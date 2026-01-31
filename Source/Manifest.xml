@@ -4,6 +4,7 @@
 
   <Include file="Components\Manifest.xml" />
   <Include file="Database\Manifest.xml" />
-  <Include file="Init\Manifest.xml" />
   <Include file="SlashCmd\Manifest.xml" />
+
+  <Script file="Main.lua" />
 </Ui>

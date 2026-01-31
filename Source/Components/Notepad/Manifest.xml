@@ -1,0 +1,11 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+  <Script file="Notepad.lua"/>
+  <Script file="UI\Buttons.lua"/>
+  <Script file="UI\Frame.lua"/>
+  <Script file="UI\HighlightBorder.lua"/>
+  <Script file="UI\InputField.lua"/>
+  <Script file="UI\ScrollFrame.lua"/>
+  <Script file="Services\EventHandler.lua"/>
+  <Script file="Services\NoteManager.lua"/>
+  <Script file="Services\WindowManager.lua"/>
+</Ui>
