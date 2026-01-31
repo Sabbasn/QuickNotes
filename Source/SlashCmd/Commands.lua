@@ -1,7 +1,7 @@
 local SLASH_COMMANDS_DESCRIPTION = {
   { commands = "help",   description = "Shows a list over all available commands." },
   { commands = "toggle", description = "Toggles the visibility of the notepad." },
-  { commands = "reset", description = "Resets the size of the notepad to its default size."}
+  { commands = "reset", description = "Resets the position and size of the notepad to its default values."}
 }
 
 function QuickNotes.SlashCmd.Help()
@@ -13,15 +13,19 @@ function QuickNotes.SlashCmd.Help()
 end
 
 function QuickNotes.SlashCmd.ToggleVisibility()
-  if (QuickNotes.Interface.MainFrame:IsShown()) then
-    QuickNotes.Interface.MainFrame:Hide()
+  if (QuickNotes.Interface.MainFrame.Frame:IsShown()) then
+    QuickNotes.Interface.MainFrame.Frame:Hide()
   else
-    QuickNotes.Interface.MainFrame:Show()
+    QuickNotes.Interface.MainFrame.Frame:Show()
   end
 end
 
-function QuickNotes.SlashCmd.ResetSize()
-  QuickNotes.Interface.MainFrame:SetSize(225, 300)
+function QuickNotes.SlashCmd.ResetPositionAndSize()
+  QuickNotes.Interface.MainFrame:Maximize()
+  QuickNotes.Interface.MainFrame.Frame:SetSize(225, 300)
+  QuickNotes.Interface.MainFrame.Frame:ClearAllPoints()
+  QuickNotes.Interface.MainFrame.Frame:SetPoint("CENTER", UIParent, 0, 0)
   CharSettings["frameSize"] = {225, 300}
-  print("|cffffcc00QuickNotes:|r The notepad has been reset to its default size.")
+  CharSettings["minimized"] = false
+  print("|cffffcc00QuickNotes:|r The notepad has been reset to its default position and size.")
 end
