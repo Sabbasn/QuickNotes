@@ -1,15 +1,12 @@
 function QuickNotes.Database.Initialize()
-  if CharNotesDB == nil then
-    CharNotesDB = {}
-  end
-  if QuickNotesDB == nil then
-    QuickNotesDB = {}
-  end
+  CharNotesDB = CharNotesDB or {}
+  CharacterNotepads = CharacterNotepads or {}
+  QuickNotesDB = QuickNotesDB or {}
   if CharSettings == nil then
     CharSettings = {
       ["visible"] = true,
       ["minimized"] = true,
-      ["frameSize"] = {225, 300}
+      ["frameLocked"] = false,
     }
   end
 end

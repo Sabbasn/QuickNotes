@@ -5,7 +5,8 @@ function Notepad:Minimize()
     self.Frame:SetResizable(false)
     self.Frame.InputField:Hide()
     self.Frame.AddButton:Hide()
-	self.Frame.ResizeButton:SetAlpha(0)
+	self.Frame.ResizeButton:Hide()
+	self.Frame.LockButton:Hide()
     if self.Frame.NoteField then
         self.Frame.NoteField:Hide()
     end
@@ -18,7 +19,8 @@ function Notepad:Maximize()
     self.Frame:SetResizable(true)
     self.Frame.InputField:Show()
     self.Frame.AddButton:Show()
-	self.Frame.ResizeButton:SetAlpha(1)
+	self.Frame.ResizeButton:Show()
+	self.Frame.LockButton:Show()
     if self.Frame.NoteField then
         self.Frame.NoteField:Show()
     end
@@ -38,4 +40,19 @@ function Notepad:ToggleMinimize()
     else
         self:Maximize()
     end
+end
+
+function Notepad:ToggleUILock(locked)
+	if locked then
+		self.isLocked = true
+		self.Frame:SetResizable(false)
+		self.Frame.LockButton:SetText("unlock")
+		self.Frame.ResizeButton:Hide()
+	else
+		self.isLocked = false
+		self.Frame:SetResizable(true)
+		self.Frame.LockButton:SetText("lock")
+		self.Frame.ResizeButton:Show()
+	end
+    CharSettings["frameLocked"] = self.isLocked
 end

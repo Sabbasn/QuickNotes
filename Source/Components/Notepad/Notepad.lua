@@ -1,17 +1,17 @@
 Notepad = {}
 Notepad.__index = Notepad
 
-function Notepad.new(name, parent)
+function Notepad.new(name)
 	local self = setmetatable({}, Notepad)
 	self.name = name
-	self.parent = parent
-	self.yOffsetSurplus = 0
+	self.isLocked = false
 	self.isMinimized = false
 	self.notes = {}
 
 	self:Initialize()
 	return self
 end
+
 
 function Notepad:Initialize()
 	self:_InitializeFrame()

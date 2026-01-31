@@ -1,5 +1,5 @@
 function Notepad:_InitializeBorderGlow()
-    self.Frame.HighlightBorder = self.Frame:CreateTexture("QN_HighlightBorder", "BORDER", nil)
+    self.Frame.HighlightBorder = self.Frame:CreateTexture("QN_" .. self.name .. "_HighlightBorder", "BORDER", nil)
     self.Frame.HighlightBorder:SetAllPoints()
     self.Frame.HighlightBorder:SetAtlas("communities-create-avatar-border-selected")
     self.Frame.HighlightBorder:SetAlpha(0)

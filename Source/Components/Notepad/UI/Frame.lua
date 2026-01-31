@@ -1,5 +1,5 @@
 function Notepad:_InitializeFrame()
-    self.Frame = CreateFrame("Frame", "QN_MainFrame", UIParent)
+    self.Frame = CreateFrame("Frame", "QN_" .. self.name, UIParent)
     self.Frame:SetSize(225, 300)
     self.Frame:SetPoint("CENTER")
     self.Frame:SetMovable(true)
@@ -9,7 +9,7 @@ function Notepad:_InitializeFrame()
     self.Frame:SetResizeBounds(225, 100, 500, 600)
 
     -- Main Frame Background
-    self.Frame.Background = self.Frame:CreateTexture("QN_Background", "BACKGROUND")
+    self.Frame.Background = self.Frame:CreateTexture("QN_" .. self.name .. "_Background", "BACKGROUND")
     self.Frame.Background:SetAllPoints()
     self.Frame.Background:SetColorTexture(0, 0, 0, 0.3)
 
@@ -21,8 +21,16 @@ function Notepad:_InitializeFrame()
 
     -- Dragging
     self.Frame:RegisterForDrag("LeftButton")
-    self.Frame:SetScript("OnDragStart", self.Frame.StartMoving)
-    self.Frame:SetScript("OnDragStop", self.Frame.StopMovingOrSizing)
+    self.Frame:SetScript("OnDragStart", function ()
+        if (not self.isLocked) then
+            self.Frame:StartMoving()
+        end
+    end)
+    self.Frame:SetScript("OnDragStop", function ()
+        if (not self.isLocked) then
+            self.Frame:StopMovingOrSizing()
+        end
+    end)
 end
 
 
