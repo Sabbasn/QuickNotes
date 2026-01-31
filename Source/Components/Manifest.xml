@@ -1,4 +1,5 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
   <Include file="MinimapButton\Manifest.xml" />
   <Include file="Notepad\Manifest.xml" />
+  <Include file="Settings\Manifest.xml" />
 </Ui>

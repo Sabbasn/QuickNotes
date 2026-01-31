@@ -25,6 +25,8 @@ function Notepad:OnVariablesLoaded()
     self.isLocked = CharSettings["frameLocked"] or false
     self.isMinimized = CharSettings["minimized"] or false
     self:ToggleUILock(self.isLocked)
+
+    self:_InitializeSettings()
 end
 
 function Notepad:OnAddonLoaded()

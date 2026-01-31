@@ -7,11 +7,11 @@ function Notepad.new(name)
 	self.isLocked = false
 	self.isMinimized = false
 	self.notes = {}
+	self.settings = nil
 
 	self:Initialize()
 	return self
 end
-
 
 function Notepad:Initialize()
 	self:_InitializeFrame()
@@ -21,6 +21,17 @@ function Notepad:Initialize()
 	self:_InitializeBorderGlow()
 	
 	self:_InitializeEventHandler()
+end
+
+function Notepad:_InitializeSettings()
+	self.settings = NotepadSettings.new(self)
+	self.settings:Initialize()
+	self.settings:LoadSettings()
+	self.settings:ApplyLoadedSettings()
+end
+
+function Notepad:ShowSettings()
+	self.settings:Open()
 end
 
 return Notepad

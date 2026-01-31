@@ -1,5 +1,6 @@
 function Notepad:_InitializeButtons()
 	self:_InitializeToggleMinimizeButton()
+	self:_InitializeSettingsButton()
 	self:_InitializeAddNoteButton()
 	self:_InitializeResizeButton()
 end
@@ -12,6 +13,19 @@ function Notepad:_InitializeToggleMinimizeButton()
 	self.Frame.ToggleMinimizeButton:SetNormalFontObject("GameFontNormalLarge")
 	self.Frame.ToggleMinimizeButton:SetScript("OnClick", function ()
 		self:ToggleMinimize()
+	end)
+end
+
+function Notepad:_InitializeSettingsButton()
+	self.Frame.SettingsButton = CreateFrame("Button", nil, self.Frame, "BackdropTemplate")
+	self.Frame.SettingsButton:SetPoint("RIGHT", self.Frame.ToggleMinimizeButton, "LEFT", -4, 0)
+	self.Frame.SettingsButton:SetText("S")
+	self.Frame.SettingsButton:SetSize(20, 20)
+	self.Frame.SettingsButton:SetNormalFontObject("GameFontNormal")
+	self.Frame.SettingsButton:SetScript("OnClick", function ()
+		if self.settings then
+			self:ShowSettings()
+		end
 	end)
 end
 
