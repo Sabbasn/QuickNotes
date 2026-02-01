@@ -19,9 +19,26 @@ end
 function Notepad:_InitializeSettingsButton()
 	self.Frame.SettingsButton = CreateFrame("Button", nil, self.Frame, "BackdropTemplate")
 	self.Frame.SettingsButton:SetPoint("RIGHT", self.Frame.ToggleMinimizeButton, "LEFT", -4, 0)
-	self.Frame.SettingsButton:SetText("S")
-	self.Frame.SettingsButton:SetSize(20, 20)
+	local cogIcon = self.Frame.SettingsButton:CreateTexture(nil, "ARTWORK")
+	cogIcon:SetAllPoints()
+	cogIcon:SetTexture("Interface\\AddOns\\QuickNotes\\Images\\Cog.png")
+	cogIcon:SetVertexColor(0.8, 0.8, 0, 1)
+	self.Frame.SettingsButton:SetAlpha(0.7)
+	self.Frame.SettingsButton:SetSize(14, 14)
 	self.Frame.SettingsButton:SetNormalFontObject("GameFontNormal")
+	
+	self.Frame.SettingsButton:SetScript("OnEnter", function()
+		self.Frame.SettingsButton:SetAlpha(1.0)
+		GameTooltip:SetOwner(self.Frame.SettingsButton, "ANCHOR_RIGHT")
+		GameTooltip:SetText("Open Notepad Settings")
+		GameTooltip:Show()
+	end)
+
+	self.Frame.SettingsButton:SetScript("OnLeave", function()
+		self.Frame.SettingsButton:SetAlpha(0.7)
+		GameTooltip:Hide()
+	end)
+
 	self.Frame.SettingsButton:SetScript("OnClick", function ()
 		if self.settings then
 			self:ShowSettings()
