@@ -25,10 +25,6 @@ function NotepadSettings:_ResetToDefaults()
 	self.currentColor.b = 0
 	self.Frame.ColorPreview:SetColorTexture(0, 0, 0, 1)
 	
-	-- Reset opacity to 0.3
-	self.Frame.OpacitySlider:SetValue(0.3)
-	self.Frame.OpacityValue:SetText("0.3")
-	
 	-- Apply to notepad
 	if self.notepad and self.notepad.Frame and self.notepad.Frame.Background then
 		self.notepad.Frame.Background:SetColorTexture(0, 0, 0, 0.3)

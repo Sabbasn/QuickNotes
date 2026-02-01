@@ -22,52 +22,64 @@ end
 
 function NotepadSettings:_OpenColorPickerDialog()
 	-- Store reference to self for closure
-	local settingsInstance = self
-	local prevR, prevG, prevB = self.currentColor.r, self.currentColor.g, self.currentColor.b
+	local prevR, prevG, prevB, prevA = self.currentColor.r, self.currentColor.g, self.currentColor.b, self.currentColor.a
 	local background = self.notepad.Frame.Background
 	
 	-- WoW Color Picker function - real-time updates
 	ColorPickerFrame:SetColorRGB(self.currentColor.r, self.currentColor.g, self.currentColor.b)
 	ColorPickerFrame.func = function()
 		local r, g, b = ColorPickerFrame:GetColorRGB()
-		settingsInstance.currentColor.r = r
-		settingsInstance.currentColor.g = g
-		settingsInstance.currentColor.b = b
-		settingsInstance.Frame.ColorPreview:SetColorTexture(r, g, b, 1)
+		self.currentColor.r = r
+		self.currentColor.g = g
+		self.currentColor.b = b
+		self.Frame.ColorPreview:SetColorTexture(r, g, b, 1)
 		-- Apply color to notepad background
 		if background then
-			background:SetColorTexture(r, g, b, settingsInstance.notepad.backgroundOpacity or 0.3)
+			background:SetColorTexture(r, g, b, self.currentColor.a or 0.3)
 		end
+	end
+
+	ColorPickerFrame.hasOpacity, ColorPickerFrame.opacity = (self.currentColor.a ~= nil), (self.currentColor.a or 0.3)
+	ColorPickerFrame.opacityFunc = function ()
+		local alpha = OpacitySliderFrame:GetValue()
+		-- Update notepad background opacity
+		if background then
+			background:SetColorTexture(self.currentColor.r, self.currentColor.g, self.currentColor.b, alpha)
+			self.currentColor.a = alpha
+		end
+
+		self:SaveSettings()
 	end
 	
 	-- OK button callback
 	ColorPickerFrame.swatchFunc = function()
 		local r, g, b = ColorPickerFrame:GetColorRGB()
-		settingsInstance.currentColor.r = r
-		settingsInstance.currentColor.g = g
-		settingsInstance.currentColor.b = b
-		settingsInstance.Frame.ColorPreview:SetColorTexture(r, g, b, 1)
+		self.currentColor.r = r
+		self.currentColor.g = g
+		self.currentColor.b = b
+		self.Frame.ColorPreview:SetColorTexture(r, g, b, self.currentColor.a)
 		-- Apply color to notepad background
 		if background then
-			background:SetColorTexture(r, g, b, settingsInstance.notepad.backgroundOpacity or 0.3)
+			background:SetColorTexture(r, g, b, self.currentColor.a or 0.3)
 		end
 		-- Save settings
-		settingsInstance:SaveSettings()
+		self:SaveSettings()
 	end
 
 	ColorPickerFrame.cancelFunc = function ()
 		-- Restore previous color if canceled
-		settingsInstance.currentColor.r = prevR
-		settingsInstance.currentColor.g = prevG
-		settingsInstance.currentColor.b = prevB
-		settingsInstance.Frame.ColorPreview:SetColorTexture(
-			settingsInstance.currentColor.r,
-			settingsInstance.currentColor.g,
-			settingsInstance.currentColor.b,
-			1
+		self.currentColor.r = prevR
+		self.currentColor.g = prevG
+		self.currentColor.b = prevB
+		self.currentColor.a = prevA
+		self.Frame.ColorPreview:SetColorTexture(
+			self.currentColor.r,
+			self.currentColor.g,
+			self.currentColor.b,
+			self.currentColor.a
 		)
 		if background then
-			background:SetColorTexture(prevR, prevG, prevB, settingsInstance.notepad.backgroundOpacity or 0.3)
+			background:SetColorTexture(prevR, prevG, prevB, prevA)
 		end
 	end
 	

@@ -25,7 +25,9 @@ function Notepad:OnVariablesLoaded()
     self.isLocked = CharSettings["frameLocked"] or false
     self.isMinimized = CharSettings["minimized"] or false
     self:ToggleUILock(self.isLocked)
-
+    if self.isMinimized then
+        self:Minimize()
+    end
     self:_InitializeSettings()
 end
 
@@ -33,9 +35,6 @@ function Notepad:OnAddonLoaded()
     QuickNotes.SlashCmd.Initialize()
     QuickNotes.Interface.MinimapButton.Initialize()
     print("|cffffcc00QuickNotes|r loaded!")
-    if CharSettings["minimized"] then
-        self:Minimize()
-    end
 end
 
 function Notepad:OnPlayerRestingStateChanged()

@@ -6,7 +6,7 @@ function NotepadSettings.new(notepad)
 	self.notepad = notepad
 	self.Frame = nil
 	self.isOpen = false
-	self.currentColor = {r = 0, g = 0, b = 0} -- Store current color
+	self.currentColor = {r = 0, g = 0, b = 0, a = 0.3} -- Store current color
 	self.enableHighlight = false
 
 	self:Initialize()
@@ -17,7 +17,6 @@ function NotepadSettings:Initialize()
 	self:_LoadSettings()
 	self:_InitializeFrame()
 	self:_InitializeColorPicker()
-	self:_InitializeOpacitySlider()
 	self:_InitializeButtons()
 	self:_InitializeHighlightToggle()
 	self:_ApplyLoadedSettings()
