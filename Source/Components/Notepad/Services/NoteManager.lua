@@ -71,12 +71,31 @@ function Notepad:AddNote(text, save)
 
     row:EnableMouse(true)
 
+    row:SetHyperlinksEnabled(true)
+
+    row:SetScript("OnHyperlinkEnter", function(_, link)
+        row:SetAlpha(0.7)
+        GameTooltip:SetOwner(row, "ANCHOR_CURSOR_RIGHT")
+        GameTooltip:SetHyperlink(link)
+        GameTooltip:Show()
+    end)
+
+    row:SetScript("OnHyperlinkLeave", function()
+        row:SetAlpha(1)
+        GameTooltip:Hide()
+    end)
+
+    row:SetScript("OnHyperlinkClick", function()
+        self:RemoveNote(row)
+    end)
+
     row:SetScript("OnEnter", function()
         row:SetAlpha(0.7)
     end)
 
     row:SetScript("OnLeave", function()
         row:SetAlpha(1)
+        GameTooltip:Hide()
     end)
 
     row:SetScript("OnMouseDown", function()
