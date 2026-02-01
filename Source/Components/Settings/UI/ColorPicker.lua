@@ -1,23 +1,36 @@
 function NotepadSettings:_InitializeColorPicker()
-	-- Color Label
-	self.Frame.ColorLabel = self.Frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-	self.Frame.ColorLabel:SetPoint("TOPLEFT", self.Frame, 12, -40)
-	self.Frame.ColorLabel:SetText("Background Color:")
-
-	-- Color Preview Box
-	self.Frame.ColorPreview = self.Frame:CreateTexture("QN_Settings_ColorPreview", "ARTWORK")
-	self.Frame.ColorPreview:SetSize(30, 20)
-	self.Frame.ColorPreview:SetPoint("LEFT", self.Frame.ColorLabel, "RIGHT", 10, 0)
-	self.Frame.ColorPreview:SetColorTexture(self.currentColor.r, self.currentColor.g, self.currentColor.b, 1)
 
 	-- Color Picker Button
-	self.Frame.ColorPickerButton = CreateFrame("Button", "QN_Settings_ColorPicker", self.Frame, "UIPanelButtonTemplate")
-	self.Frame.ColorPickerButton:SetSize(100, 22)
-	self.Frame.ColorPickerButton:SetPoint("LEFT", self.Frame.ColorPreview, "RIGHT", 10, 0)
+	self.Frame.ColorPickerButton = CreateFrame("Button", "QN_Settings_ColorPicker", self.Frame)
+	self.Frame.ColorPickerButton:SetPoint("TOPLEFT", self.Frame, 15, -30)
+	self.Frame.ColorPickerButton:SetSize(25, 25)
 	self.Frame.ColorPickerButton:SetText("Choose Color")
 	self.Frame.ColorPickerButton:SetScript("OnClick", function()
 		self:_OpenColorPickerDialog()
 	end)
+
+	-- Color Preview Box
+	self.Frame.ColorPickerButton.Preview = self.Frame:CreateTexture("QN_Settings_ColorPreview", "ARTWORK")
+	self.Frame.ColorPickerButton.Preview:SetSize(20, 20)
+	self.Frame.ColorPickerButton.Preview:SetPoint("CENTER", self.Frame.ColorPickerButton, "CENTER", 0, 0)
+	self.Frame.ColorPickerButton.Preview:SetColorTexture(self.currentColor.r, self.currentColor.g, self.currentColor.b, 1)
+
+	-- Label
+	self.Frame.ColorPickerButton.Text = self.Frame.ColorPickerButton:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+	self.Frame.ColorPickerButton.Text:SetPoint("LEFT", self.Frame.ColorPickerButton, "LEFT", 27, 0)
+	self.Frame.ColorPickerButton.Text:SetText("Background Color")
+	self.Frame.ColorPickerButton.Text:SetJustifyH("LEFT")
+
+	self.Frame.ColorPickerButton:SetScript("OnEnter", function()
+		GameTooltip:SetOwner(self.Frame.ColorPickerButton, "ANCHOR_RIGHT")
+		GameTooltip:SetText("Choose the background color for the notepad.", nil, nil, nil, nil, true)
+		GameTooltip:Show()
+	end)
+
+	self.Frame.ColorPickerButton:SetScript("OnLeave", function()
+		GameTooltip:Hide()
+	end)
+
 end
 
 function NotepadSettings:_OpenColorPickerDialog()
@@ -32,7 +45,7 @@ function NotepadSettings:_OpenColorPickerDialog()
 		self.currentColor.r = r
 		self.currentColor.g = g
 		self.currentColor.b = b
-		self.Frame.ColorPreview:SetColorTexture(r, g, b, 1)
+		self.Frame.ColorPickerButton.Preview:SetColorTexture(r, g, b, 1)
 		-- Apply color to notepad background
 		if background then
 			background:SetColorTexture(r, g, b, self.currentColor.a or 0.3)
@@ -57,7 +70,7 @@ function NotepadSettings:_OpenColorPickerDialog()
 		self.currentColor.r = r
 		self.currentColor.g = g
 		self.currentColor.b = b
-		self.Frame.ColorPreview:SetColorTexture(r, g, b, self.currentColor.a)
+		self.Frame.ColorPickerButton.Preview:SetColorTexture(r, g, b, self.currentColor.a)
 		-- Apply color to notepad background
 		if background then
 			background:SetColorTexture(r, g, b, self.currentColor.a or 0.3)
@@ -72,7 +85,7 @@ function NotepadSettings:_OpenColorPickerDialog()
 		self.currentColor.g = prevG
 		self.currentColor.b = prevB
 		self.currentColor.a = prevA
-		self.Frame.ColorPreview:SetColorTexture(
+		self.Frame.ColorPickerButton.Preview:SetColorTexture(
 			self.currentColor.r,
 			self.currentColor.g,
 			self.currentColor.b,
