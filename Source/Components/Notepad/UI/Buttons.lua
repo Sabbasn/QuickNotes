@@ -30,7 +30,7 @@ function Notepad:_InitializeSettingsButton()
 	self.Frame.SettingsButton:SetScript("OnEnter", function()
 		self.Frame.SettingsButton:SetAlpha(1.0)
 		GameTooltip:SetOwner(self.Frame.SettingsButton, "ANCHOR_RIGHT")
-		GameTooltip:SetText("Open Notepad Settings")
+		GameTooltip:SetText("Settings")
 		GameTooltip:Show()
 	end)
 
