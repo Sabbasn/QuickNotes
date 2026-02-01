@@ -16,7 +16,7 @@ function Notepad:_InitializeFrame()
     -- Title
     self.Frame.Title = self.Frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
     self.Frame.Title:SetTextColor(1, 1, 0, 1)
-    self.Frame.Title:SetPoint("TOPLEFT", self.Frame, 4, -4)
+    self.Frame.Title:SetPoint("TOPLEFT", self.Frame, 4, -6)
     self.Frame.Title:SetText("Quick Notes")
 
     -- Dragging
