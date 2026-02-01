@@ -23,7 +23,12 @@ function NotepadSettings:_ResetToDefaults()
 	self.currentColor.r = 0
 	self.currentColor.g = 0
 	self.currentColor.b = 0
-	self.Frame.ColorPreview:SetColorTexture(0, 0, 0, 1)
+	self.currentColor.a = 0.3
+	self.Frame.ColorPickerButton.Preview:SetColorTexture(
+		self.currentColor.r,
+		self.currentColor.g,
+		self.currentColor.b,
+		self.currentColor.a)
 	
 	-- Apply to notepad
 	if self.notepad and self.notepad.Frame and self.notepad.Frame.Background then
