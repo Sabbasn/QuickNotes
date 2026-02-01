@@ -1,7 +1,7 @@
 function NotepadSettings:_InitializeHighlightToggle()
 	-- Highlight Toggle
 	self.Frame.HighlightToggle = CreateFrame("CheckButton", "QN_Settings_HighlightToggle", self.Frame, "UICheckButtonTemplate")
-	self.Frame.HighlightToggle:SetPoint("TOPLEFT", self.Frame, 12, -70)
+	self.Frame.HighlightToggle:SetPoint("TOPLEFT", self.Frame, 12, -60)
 	self.Frame.HighlightToggle.Text:SetText("Enable Highlighting")
 	self.Frame.HighlightToggle.Text:SetFontObject("GameFontNormal")
 	
