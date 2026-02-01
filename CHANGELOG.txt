@@ -1,6 +1,2 @@
-- Added settings panel for customization
-- Added color and opacity customization for the notepad background
-- Added option to disable/enable highlighting when entering rested zones
-- Added lock/unlock button for freezing the position and scale of the notepad
-- Reduced scale of the notepad's title
-- Removed restriction of scaling the notepad's width
+- Fixed not being able to link items in notepad
+- Added icon texture
