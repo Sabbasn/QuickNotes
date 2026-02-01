@@ -8,7 +8,9 @@ function Notepad:_InitializeInputField()
     self.Frame.InputField:SetMaxLetters(120)
 
     hooksecurefunc("HandleModifiedItemClick", function(link)
-        self.Frame.InputField:Insert(link)
+        if self.Frame and self.Frame.InputField and self.Frame.InputField:HasFocus() then
+            self.Frame.InputField:Insert(link)
+        end
     end)
 
     -- Credit: Fizzlemizz from https://www.wowinterface.com/forums/showthread.php?t=59562

@@ -1,2 +1,1 @@
-- Fixed not being able to link items in notepad
-- Added icon texture
+- Fixed items being linked into input field without it being focused
