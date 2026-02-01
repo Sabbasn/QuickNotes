@@ -15,6 +15,15 @@ function Notepad:_InitializeEventHandler()
             self:OnPlayerLooking()
         end
     end)
+
+    -- Mouse Enter
+    self.Frame:SetScript("OnEnter", function()
+        self.Frame.HighlightBorderAnimGroup:Stop()
+    end)
+
+    -- Mouse Leave
+    self.Frame:SetScript("OnLeave", function()
+    end)
 end
 
 function Notepad:OnVariablesLoaded()
@@ -49,4 +58,12 @@ function Notepad:OnPlayerLooking()
     if self.Frame.InputField then
         self.Frame.InputField:ClearFocus()
     end
+end
+
+function Notepad:OnEnter()
+
+end
+
+function Notepad:OnLeave()
+
 end

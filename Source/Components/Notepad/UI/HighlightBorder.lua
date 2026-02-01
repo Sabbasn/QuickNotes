@@ -15,8 +15,4 @@ function Notepad:_InitializeBorderGlow()
     HighlightBorderFadeOut:SetToAlpha(0)
     HighlightBorderFadeOut:SetOrder(2)
     self.Frame.HighlightBorderAnimGroup:SetLooping("REPEAT")
-
-	self.Frame:SetScript("OnEnter", function ()
-        self.Frame.HighlightBorderAnimGroup:Stop()
-    end)
 end
