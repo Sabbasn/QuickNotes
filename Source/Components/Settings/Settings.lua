@@ -9,15 +9,18 @@ function NotepadSettings.new(notepad)
 	self.currentColor = {r = 0, g = 0, b = 0} -- Store current color
 	self.enableHighlight = false
 
+	self:Initialize()
 	return self
 end
 
 function NotepadSettings:Initialize()
+	self:_LoadSettings()
 	self:_InitializeFrame()
 	self:_InitializeColorPicker()
 	self:_InitializeOpacitySlider()
 	self:_InitializeButtons()
 	self:_InitializeHighlightToggle()
+	self:_ApplyLoadedSettings()
 end
 
 function NotepadSettings:Open()

@@ -22,7 +22,7 @@ function NotepadSettings:SaveSettings()
 	end
 end
 
-function NotepadSettings:LoadSettings()
+function NotepadSettings:_LoadSettings()
 	if not CharSettings then
 		CharSettings = {}
 	end
@@ -33,7 +33,6 @@ function NotepadSettings:LoadSettings()
 
   if CharSettings.notepadSettings.enableHighlight ~= nil then
     self.enableHighlight = CharSettings.notepadSettings.enableHighlight
-    self.Frame.HighlightToggle:SetChecked(self.enableHighlight)
   end
 	
 	-- Load background color
@@ -59,7 +58,7 @@ function NotepadSettings:LoadSettings()
 	end
 end
 
-function NotepadSettings:ApplyLoadedSettings()
+function NotepadSettings:_ApplyLoadedSettings()
 	if not CharSettings or not CharSettings.notepadSettings then
 		return
 	end
@@ -72,6 +71,6 @@ function NotepadSettings:ApplyLoadedSettings()
 		local opacity = CharSettings.notepadSettings.backgroundOpacity or 0.3
 		self.notepad.Frame.Background:SetColorTexture(r, g, b, opacity)
 		self.notepad.backgroundOpacity = opacity
-    self.enableHighlight = CharSettings.notepadSettings.enableHighlight or false
+		self.Frame.HighlightToggle:SetChecked(self.enableHighlight)
 	end
 end

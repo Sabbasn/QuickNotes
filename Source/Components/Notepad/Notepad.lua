@@ -25,9 +25,6 @@ end
 
 function Notepad:_InitializeSettings()
 	self.settings = NotepadSettings.new(self)
-	self.settings:Initialize()
-	self.settings:LoadSettings()
-	self.settings:ApplyLoadedSettings()
 end
 
 function Notepad:ShowSettings()
