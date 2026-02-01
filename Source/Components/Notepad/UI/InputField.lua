@@ -7,11 +7,8 @@ function Notepad:_InitializeInputField()
     self.Frame.InputField:SetAutoFocus(false)
     self.Frame.InputField:SetMaxLetters(120)
 
-    -- Credit: Phanx from https://www.wowinterface.com/forums/showthread.php?t=45297
-    hooksecurefunc("ChatEdit_InsertLink", function(link)
-        if self.Frame.InputField:IsVisible() and self.Frame.InputField:HasFocus() then
-            self.Frame.InputField:Insert(link)
-        end
+    hooksecurefunc("HandleModifiedItemClick", function(link)
+        self.Frame.InputField:Insert(link)
     end)
 
     -- Credit: Fizzlemizz from https://www.wowinterface.com/forums/showthread.php?t=59562
