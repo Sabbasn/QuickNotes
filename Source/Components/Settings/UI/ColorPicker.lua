@@ -38,9 +38,7 @@ function NotepadSettings:_OpenColorPickerDialog()
 	local prevR, prevG, prevB, prevA = self.currentColor.r, self.currentColor.g, self.currentColor.b, self.currentColor.a
 	local background = self.notepad.Frame.Background
 	
-	-- WoW Color Picker function - real-time updates
-	ColorPickerFrame:SetColorRGB(self.currentColor.r, self.currentColor.g, self.currentColor.b)
-	ColorPickerFrame.func = function()
+	local function updateColor()
 		local r, g, b = ColorPickerFrame:GetColorRGB()
 		self.currentColor.r = r
 		self.currentColor.g = g
@@ -52,9 +50,8 @@ function NotepadSettings:_OpenColorPickerDialog()
 		end
 	end
 
-	ColorPickerFrame.hasOpacity, ColorPickerFrame.opacity = (self.currentColor.a ~= nil), (self.currentColor.a or 0.3)
-	ColorPickerFrame.opacityFunc = function ()
-		local alpha = OpacitySliderFrame:GetValue()
+	local function updateOpacity()
+		local alpha = ColorPickerFrame:GetColorAlpha()
 		-- Update notepad background opacity
 		if background then
 			background:SetColorTexture(self.currentColor.r, self.currentColor.g, self.currentColor.b, alpha)
@@ -64,22 +61,7 @@ function NotepadSettings:_OpenColorPickerDialog()
 		self:SaveSettings()
 	end
 	
-	-- OK button callback
-	ColorPickerFrame.swatchFunc = function()
-		local r, g, b = ColorPickerFrame:GetColorRGB()
-		self.currentColor.r = r
-		self.currentColor.g = g
-		self.currentColor.b = b
-		self.Frame.ColorPickerButton.Preview:SetColorTexture(r, g, b, self.currentColor.a)
-		-- Apply color to notepad background
-		if background then
-			background:SetColorTexture(r, g, b, self.currentColor.a or 0.3)
-		end
-		-- Save settings
-		self:SaveSettings()
-	end
-
-	ColorPickerFrame.cancelFunc = function ()
+	local function cancelColor()
 		-- Restore previous color if canceled
 		self.currentColor.r = prevR
 		self.currentColor.g = prevG
@@ -96,5 +78,14 @@ function NotepadSettings:_OpenColorPickerDialog()
 		end
 	end
 	
-	ColorPickerFrame:Show()
+	ColorPickerFrame:SetupColorPickerAndShow({
+		r = self.currentColor.r,
+		g = self.currentColor.g,
+		b = self.currentColor.b,
+		hasOpacity = (self.currentColor.a ~= nil),
+		opacity = self.currentColor.a or 0.3,
+		swatchFunc = updateColor,
+		opacityFunc = updateOpacity,
+		cancelFunc = cancelColor,
+	})
 end

@@ -1,1 +1,3 @@
-- Fixed items being linked into input field without it being focused
+- Updated interface versions
+- Added Forever compatibility
+- Updated color picker from legacy WoW API to newer version
