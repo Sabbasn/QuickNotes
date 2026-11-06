@@ -1,5 +1,5 @@
 ## Interface: 120105, 50504, 40402, 38002, 30405, 20506, 11509, 16001
-## Version: 1.4.3
+## Version: 1.4.4
 ## Title: Quick Notes
 ## Notes: A simple notepad to scribble down notes
 ## IconTexture: Interface\AddOns\QuickNotes\Images\QuickNotesIcon
