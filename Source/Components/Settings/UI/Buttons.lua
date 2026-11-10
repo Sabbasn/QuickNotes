@@ -1,13 +1,4 @@
 function NotepadSettings:_InitializeButtons()
-	-- Reset Button
-	self.Frame.ResetButton = CreateFrame("Button", "QN_Settings_Reset", self.Frame, "UIPanelButtonTemplate")
-	self.Frame.ResetButton:SetSize(100, 22)
-	self.Frame.ResetButton:SetPoint("BOTTOMLEFT", self.Frame, 18, 12)
-	self.Frame.ResetButton:SetText("Reset Color")
-	self.Frame.ResetButton:SetScript("OnClick", function()
-		self:_ResetToDefaults()
-	end)
-
 	self.Frame.ResetCharacterButton = CreateFrame("Button", "QN_Settings_ResetCharacter", self.Frame)
 	self.Frame.ResetCharacterButton:SetSize(304, 18)
 	self.Frame.ResetCharacterButton:SetPoint("TOPLEFT", self.Frame, 18, -220)

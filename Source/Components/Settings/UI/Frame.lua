@@ -1,46 +1,27 @@
 function NotepadSettings:_InitializeFrame()
-	self.Frame = CreateFrame("Frame", "QN_Settings", UIParent)
+	self.Frame = CreateFrame("Frame", "QN_Settings", UIParent, "PortraitFrameTemplate")
 	self.Frame:SetSize(340, 290)
 	self.Frame:SetPoint("CENTER")
 	self.Frame:SetMovable(true)
 	self.Frame:EnableMouse(true)
 	self.Frame:SetClampedToScreen(true)
+	self.Frame:SetFrameStrata("HIGH")
+	self.Frame:SetTitle("Quick Notes Options")
 
-	self.Frame.Background = self.Frame:CreateTexture("QN_Settings_Background", "BACKGROUND")
-	self.Frame.Background:SetAllPoints()
-	self.Frame.Background:SetColorTexture(0.075, 0.055, 0.075, 0.98)
-
-	local function AddEdge(name, point, relativePoint, x, y, width, height, r, g, b, a)
-		local edge = self.Frame:CreateTexture(name, "BORDER")
-		edge:SetPoint(point, self.Frame, relativePoint, x, y)
-		edge:SetSize(width, height)
-		edge:SetColorTexture(r, g, b, a)
-		return edge
+	if self.Frame.Bg then
+		self.Frame.Bg:SetColorTexture(30 / 255, 23 / 255, 18 / 255, 0.85)
 	end
-
-	self.Frame.Header = self.Frame:CreateTexture(nil, "BORDER")
-	self.Frame.Header:SetPoint("TOPLEFT", self.Frame, "TOPLEFT", 3, -3)
-	self.Frame.Header:SetPoint("TOPRIGHT", self.Frame, "TOPRIGHT", -3, -3)
-	self.Frame.Header:SetHeight(38)
-	self.Frame.Header:SetColorTexture(0.12, 0.075, 0.035, 0.95)
-
-	local outer = {r = 0.19, g = 0.12, b = 0.055, a = 1}
-	local inner = {r = 0.62, g = 0.43, b = 0.17, a = 0.9}
-	AddEdge("QN_Settings_OuterTop", "TOPLEFT", "TOPLEFT", 0, 0, 340, 2, outer.r, outer.g, outer.b, outer.a)
-	AddEdge("QN_Settings_OuterBottom", "BOTTOMLEFT", "BOTTOMLEFT", 0, 0, 340, 2, outer.r, outer.g, outer.b, outer.a)
-	AddEdge("QN_Settings_OuterLeft", "TOPLEFT", "TOPLEFT", 0, 0, 2, 290, outer.r, outer.g, outer.b, outer.a)
-	AddEdge("QN_Settings_OuterRight", "TOPRIGHT", "TOPRIGHT", 0, 0, 2, 290, outer.r, outer.g, outer.b, outer.a)
-	AddEdge("QN_Settings_InnerTop", "TOPLEFT", "TOPLEFT", 3, -3, 334, 1, inner.r, inner.g, inner.b, inner.a)
-	AddEdge("QN_Settings_InnerBottom", "BOTTOMLEFT", "BOTTOMLEFT", 3, 3, 334, 1, inner.r, inner.g, inner.b, inner.a)
-	AddEdge("QN_Settings_InnerLeft", "TOPLEFT", "TOPLEFT", 3, -3, 1, 284, inner.r, inner.g, inner.b, inner.a)
-	AddEdge("QN_Settings_InnerRight", "TOPRIGHT", "TOPRIGHT", -3, -3, 1, 284, inner.r, inner.g, inner.b, inner.a)
-
-	AddEdge("QN_Settings_HeaderAccent", "TOPLEFT", "TOPLEFT", 3, -40, 334, 1, 0.78, 0.58, 0.22, 0.85)
-
-	self.Frame.Title = self.Frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-	self.Frame.Title:SetTextColor(1, 0.82, 0, 1)
-	self.Frame.Title:SetPoint("TOP", self.Frame, "TOP", 0, -13)
-	self.Frame.Title:SetText("Quick Notes Options")
+	if self.Frame.PortraitContainer and self.Frame.PortraitContainer.portrait then
+		local portrait = self.Frame.PortraitContainer.portrait
+		local portraitBackground = self.Frame.PortraitContainer:CreateTexture(nil, "BACKGROUND")
+		portraitBackground:SetAllPoints(portrait)
+		portraitBackground:SetColorTexture(30 / 255, 23 / 255, 18 / 255, 1)
+		local portraitMask = self.Frame.PortraitContainer:CreateMaskTexture()
+		portraitMask:SetTexture("Interface\\CharacterFrame\\TempPortraitAlphaMask")
+		portraitMask:SetAllPoints(portrait)
+		portraitBackground:AddMaskTexture(portraitMask)
+		portrait:SetTexture("Interface\\AddOns\\QuickNotes\\Images\\QuickNotesIcon.tga")
+	end
 
 	local function AddDivider(name, yOffset)
 		local divider = self.Frame:CreateTexture(name, "BORDER")
@@ -67,8 +48,6 @@ function NotepadSettings:_InitializeFrame()
 
 	AddDivider("QN_Settings_FooterDivider", -252)
 
-	self.Frame.CloseButton = CreateFrame("Button", "QN_Settings_Close", self.Frame, "UIPanelCloseButton")
-	self.Frame.CloseButton:SetPoint("TOPRIGHT", self.Frame, -3, -3)
 	self.Frame.CloseButton:SetScript("OnClick", function()
 		self:Close()
 	end)
