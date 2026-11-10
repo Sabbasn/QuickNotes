@@ -147,6 +147,12 @@ function Notepad:_ReanchorNotes()
     self:_UpdateNotesLayout()
 end
 
+function Notepad:_UpdateNotesForWidth()
+    for _, note in ipairs(self.notes) do
+        note:SetHeight(math.max(22, note.Text:GetStringHeight() + 6))
+    end
+    self:_UpdateNotesLayout()
+end
 
 function Notepad:_UpdateNotesLayout()
     local child = self.Frame.ScrollFrame:GetScrollChild()
