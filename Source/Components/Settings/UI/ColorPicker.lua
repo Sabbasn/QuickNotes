@@ -1,25 +1,20 @@
 function NotepadSettings:_InitializeColorPicker()
+	self.Frame.ColorPickerLabel = self.Frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+	self.Frame.ColorPickerLabel:SetPoint("TOPLEFT", self.Frame, 22, -101)
+	self.Frame.ColorPickerLabel:SetText("Background color")
 
-	-- Color Picker Button
-	self.Frame.ColorPickerButton = CreateFrame("Button", "QN_Settings_ColorPicker", self.Frame)
-	self.Frame.ColorPickerButton:SetPoint("TOPLEFT", self.Frame, 15, -30)
-	self.Frame.ColorPickerButton:SetSize(25, 25)
-	self.Frame.ColorPickerButton:SetText("Choose Color")
+	self.Frame.ColorPickerButton = CreateFrame("Button", "QN_Settings_ColorPicker", self.Frame, "UIPanelButtonTemplate")
+	self.Frame.ColorPickerButton:SetPoint("TOPRIGHT", self.Frame, "TOPRIGHT", -18, -96)
+	self.Frame.ColorPickerButton:SetSize(88, 24)
+	self.Frame.ColorPickerButton:SetText("Change...")
 	self.Frame.ColorPickerButton:SetScript("OnClick", function()
 		self:_OpenColorPickerDialog()
 	end)
 
-	-- Color Preview Box
-	self.Frame.ColorPickerButton.Preview = self.Frame:CreateTexture("QN_Settings_ColorPreview", "ARTWORK")
+	self.Frame.ColorPickerButton.Preview = self.Frame:CreateTexture("QN_Settings_ColorPreview", "OVERLAY")
 	self.Frame.ColorPickerButton.Preview:SetSize(20, 20)
-	self.Frame.ColorPickerButton.Preview:SetPoint("CENTER", self.Frame.ColorPickerButton, "CENTER", 0, 0)
+	self.Frame.ColorPickerButton.Preview:SetPoint("RIGHT", self.Frame.ColorPickerButton, "LEFT", -8, 0)
 	self.Frame.ColorPickerButton.Preview:SetColorTexture(self.currentColor.r, self.currentColor.g, self.currentColor.b, 1)
-
-	-- Label
-	self.Frame.ColorPickerButton.Text = self.Frame.ColorPickerButton:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-	self.Frame.ColorPickerButton.Text:SetPoint("LEFT", self.Frame.ColorPickerButton, "LEFT", 27, 0)
-	self.Frame.ColorPickerButton.Text:SetText("Background Color")
-	self.Frame.ColorPickerButton.Text:SetJustifyH("LEFT")
 
 	self.Frame.ColorPickerButton:SetScript("OnEnter", function()
 		GameTooltip:SetOwner(self.Frame.ColorPickerButton, "ANCHOR_RIGHT")
@@ -30,7 +25,6 @@ function NotepadSettings:_InitializeColorPicker()
 	self.Frame.ColorPickerButton:SetScript("OnLeave", function()
 		GameTooltip:Hide()
 	end)
-
 end
 
 function NotepadSettings:_OpenColorPickerDialog()

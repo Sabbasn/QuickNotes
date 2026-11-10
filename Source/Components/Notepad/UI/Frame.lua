@@ -32,5 +32,3 @@ function Notepad:_InitializeFrame()
         end
     end)
 end
-
-

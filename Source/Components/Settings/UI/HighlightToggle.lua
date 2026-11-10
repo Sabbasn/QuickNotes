@@ -1,18 +1,18 @@
 function NotepadSettings:_InitializeHighlightToggle()
-	-- Highlight Toggle
 	self.Frame.HighlightToggle = CreateFrame("CheckButton", "QN_Settings_HighlightToggle", self.Frame, "UICheckButtonTemplate")
-	self.Frame.HighlightToggle:SetPoint("TOPLEFT", self.Frame, 12, -60)
+	self.Frame.HighlightToggle:SetPoint("TOPLEFT", self.Frame, 14, -120)
 	self.Frame.HighlightToggle.Text:SetText("Enable Highlighting")
 	self.Frame.HighlightToggle.Text:SetFontObject("GameFontNormal")
-	
-	-- Set initial state
+
 	self.Frame.HighlightToggle:SetChecked(self.enableHighlight or false)
-	
-	-- Toggle changed
 	self.Frame.HighlightToggle:SetScript("OnClick", function(button)
 		self.enableHighlight = button:GetChecked()
 		self:SaveSettings()
 	end)
+
+	self.Frame.HighlightDescription = self.Frame:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+	self.Frame.HighlightDescription:SetPoint("TOPLEFT", self.Frame, 45, -153)
+	self.Frame.HighlightDescription:SetText("Highlights the notepad when you enter a rested zone.")
 
 	self.Frame.HighlightToggle:SetScript("OnEnter", function()
 		GameTooltip:SetOwner(self.Frame.HighlightToggle, "ANCHOR_RIGHT")
