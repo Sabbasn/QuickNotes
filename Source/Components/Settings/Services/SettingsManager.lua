@@ -1,44 +1,36 @@
 -- SettingsManager handles persistence and retrieval of settings
 function NotepadSettings:SaveSettings()
-	if not CharSettings then
-		CharSettings = {}
-	end
-	
-	if not CharSettings.notepadSettings then
-		CharSettings.notepadSettings = {}
-	end
+	local settings = self.notepad.data.settings
+	settings.notepadSettings = settings.notepadSettings or {}
 	
 	-- Store current color
-	CharSettings.notepadSettings.backgroundColor = {
+	settings.notepadSettings.backgroundColor = {
 		r = self.currentColor.r,
 		g = self.currentColor.g,
 		b = self.currentColor.b,
 		a = self.currentColor.a
 	}
 	
-  CharSettings.notepadSettings.enableHighlight = self.enableHighlight
+	settings.notepadSettings.enableHighlight = self.enableHighlight
 
 	if self.Frame and self.Frame.OpacitySlider then
-		CharSettings.notepadSettings.backgroundOpacity = self.opacity
+		settings.notepadSettings.backgroundOpacity = self.opacity
 	end
 end
 
 function NotepadSettings:_LoadSettings()
-	if not CharSettings then
-		CharSettings = {}
-	end
-	
-	if not CharSettings.notepadSettings then
-		CharSettings.notepadSettings = {}
-	end
+	local settings = self.notepad.data.settings
+	settings.notepadSettings = settings.notepadSettings or {}
 
-  if CharSettings.notepadSettings.enableHighlight ~= nil then
-    self.enableHighlight = CharSettings.notepadSettings.enableHighlight
-  end
+	if settings.notepadSettings.enableHighlight ~= nil then
+		self.enableHighlight = settings.notepadSettings.enableHighlight
+	else
+		self.enableHighlight = false
+	end
 	
 	-- Load background color
-	if CharSettings.notepadSettings.backgroundColor then
-		self.currentColor = CharSettings.notepadSettings.backgroundColor
+	if settings.notepadSettings.backgroundColor then
+		self.currentColor = settings.notepadSettings.backgroundColor
 	else
 		-- Use defaults
 		self.currentColor = {r = 0, g = 0, b = 0, a = 0.3}
@@ -46,7 +38,7 @@ function NotepadSettings:_LoadSettings()
 end
 
 function NotepadSettings:_ApplyLoadedSettings()
-	if not CharSettings or not CharSettings.notepadSettings then
+	if not self.notepad.data or not self.notepad.data.settings.notepadSettings then
 		return
 	end
   

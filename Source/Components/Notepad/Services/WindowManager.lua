@@ -1,6 +1,6 @@
 function Notepad:Minimize()
     local width, height = self.Frame:GetSize()
-    CharSettings["frameSize"] = {width, height}
+    self.data.settings.frameSize = {width, height}
     self.Frame:SetSize(width, 25)
     self.Frame:SetResizable(false)
     self.Frame.InputField:Hide()
@@ -12,7 +12,8 @@ function Notepad:Minimize()
     end
     self.Frame.ScrollFrame:Hide()
     self.Frame.ToggleMinimizeButton:SetText("+")
-    CharSettings["minimized"] = true
+    self.data.settings.minimized = true
+    self.isMinimized = true
 end
 
 function Notepad:Maximize()
@@ -20,25 +21,29 @@ function Notepad:Maximize()
     self.Frame.InputField:Show()
     self.Frame.AddButton:Show()
 	self.Frame.ResizeButton:Show()
+	if self.isLocked then
+		self.Frame.ResizeButton:Hide()
+	end
 	self.Frame.LockButton:Show()
     if self.Frame.NoteField then
         self.Frame.NoteField:Show()
     end
     self.Frame.ScrollFrame:Show()
     self.Frame.ToggleMinimizeButton:SetText("-")
-    if CharSettings["frameSize"] == nil then
+    if self.data.settings.frameSize == nil then
         self.Frame:SetSize(225, 300)
     else
-        self.Frame:SetSize(unpack(CharSettings["frameSize"]))
+        self.Frame:SetSize(unpack(self.data.settings.frameSize))
     end
-    CharSettings["minimized"] = false
+    self.data.settings.minimized = false
+    self.isMinimized = false
 end
 
 function Notepad:ToggleMinimize()
-    if CharSettings["minimized"] == false then
-        self:Minimize()
-    else
+    if self.data.settings.minimized then
         self:Maximize()
+    else
+        self:Minimize()
     end
 end
 
@@ -52,5 +57,68 @@ function Notepad:ToggleUILock(locked)
 		self.Frame.LockButton:SetText("lock")
 		self.Frame.ResizeButton:Show()
 	end
-    CharSettings["frameLocked"] = self.isLocked
+    self.data.settings.frameLocked = self.isLocked
+end
+
+function Notepad:LoadWindowSettings()
+    local settings = self.data.settings
+    local position = settings.framePosition
+
+    self.Frame:ClearAllPoints()
+    if position then
+        self.Frame:SetPoint(
+            position.point or "CENTER",
+            UIParent,
+            position.relativePoint or position.point or "CENTER",
+            position.x or 0,
+            position.y or 0
+        )
+    else
+        self.Frame:SetPoint("CENTER")
+    end
+
+    self.Frame:SetSize(unpack(settings.frameSize or {225, 300}))
+    self.Frame.Title:SetText(self.data.title)
+    local isMinimized = settings.minimized
+    self:Maximize()
+    self:ToggleUILock(settings.frameLocked or false)
+    if isMinimized then
+        self:Minimize()
+    end
+end
+
+function Notepad:SaveFrameSettings()
+    local settings = self.data.settings
+    if not self.isMinimized then
+        local width, height = self.Frame:GetSize()
+        settings.frameSize = {width, height}
+    end
+
+    local point, _, relativePoint, x, y = self.Frame:GetPoint(1)
+    if point then
+        settings.framePosition = {
+            point = point,
+            relativePoint = relativePoint,
+            x = x,
+            y = y,
+        }
+    end
+end
+
+function Notepad:SetVisible(visible)
+    self.visible = visible
+    self.data.visible = visible
+    if visible then
+        self.Frame:Show()
+    else
+        self.Frame:Hide()
+    end
+end
+
+function Notepad:ResetPositionAndSize()
+    self:Maximize()
+    self.Frame:SetSize(225, 300)
+    self.Frame:ClearAllPoints()
+    self.Frame:SetPoint("CENTER", UIParent, 0, 0)
+    self:SaveFrameSettings()
 end

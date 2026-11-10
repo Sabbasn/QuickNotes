@@ -74,6 +74,9 @@ function Notepad:_InitializeResizeButton()
 
 	self.Frame.ResizeButton:SetScript("OnMouseUp", function(_, button)
 		self.Frame:StopMovingOrSizing()
+		if self.data and not self.isLocked then
+			self:SaveFrameSettings()
+		end
 	end)
 
 	self.Frame.LockButton = CreateFrame("Button", nil, self.Frame)

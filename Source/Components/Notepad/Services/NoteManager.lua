@@ -1,8 +1,8 @@
 function Notepad:RemoveNote(note)
     -- Remove note from saved variables
-    for i = #CharNotesDB, 1, -1 do
-        if CharNotesDB[i] == note.Text:GetText() then
-            table.remove(CharNotesDB, i)
+    for i = #self.data.notes, 1, -1 do
+        if self.data.notes[i] == note.Text:GetText() then
+            table.remove(self.data.notes, i)
             break
         end
     end
@@ -31,7 +31,7 @@ function Notepad:AddNote(text, save)
     end
 
     if save then
-        table.insert(CharNotesDB, text)
+        table.insert(self.data.notes, text)
     end
 
     local parent = frame.ScrollFrame:GetScrollChild()
@@ -43,8 +43,8 @@ function Notepad:AddNote(text, save)
     local last = self.notes[#self.notes]
 
     if last then
-        row:SetPoint("TOPLEFT",  last, "BOTTOMLEFT",  0, -4)
-        row:SetPoint("TOPRIGHT", last, "BOTTOMRIGHT", 0, -4)
+        row:SetPoint("TOPLEFT",  last, "BOTTOMLEFT",  0, -2)
+        row:SetPoint("TOPRIGHT", last, "BOTTOMRIGHT", 0, -2)
     else
         row:SetPoint("TOPLEFT",  parent, "TOPLEFT",  0, 0)
         row:SetPoint("TOPRIGHT", parent, "TOPRIGHT", 0, 0)
@@ -52,17 +52,27 @@ function Notepad:AddNote(text, save)
 
     -- text
     local fs = row:CreateFontString(nil, "ARTWORK", "GameFontWhite")
-    fs:SetPoint("TOPLEFT",  row, "TOPLEFT",  4, -2)
-    fs:SetPoint("TOPRIGHT", row, "TOPRIGHT", -4, -2)
+    fs:SetPoint("TOPLEFT",  row, "TOPLEFT",  8, -3)
+    fs:SetPoint("TOPRIGHT", row, "TOPRIGHT", -6, -3)
     fs:SetJustifyH("LEFT")
     fs:SetJustifyV("TOP")
     fs:SetWordWrap(true)
+    fs:SetFontObject("GameFontHighlightSmall")
     fs:SetText(text)
 
     row.Text = fs
 
-    -- let the row grow with the text
-    row:SetHeight(fs:GetStringHeight() + 4)
+    row:SetHeight(math.max(22, fs:GetStringHeight() + 6))
+
+    row.Background = row:CreateTexture(nil, "BACKGROUND")
+    row.Background:SetAllPoints()
+    row.Background:SetColorTexture(0.07, 0.065, 0.06, 0.72)
+
+    row.Accent = row:CreateTexture(nil, "ARTWORK")
+    row.Accent:SetPoint("TOPLEFT", row, "TOPLEFT", 0, -3)
+    row.Accent:SetPoint("BOTTOMLEFT", row, "BOTTOMLEFT", 0, 3)
+    row.Accent:SetWidth(2)
+    row.Accent:SetColorTexture(0.56, 0.39, 0.17, 0.65)
 
     frame.InputField:ClearFocus()
     frame.InputField:SetText("")
@@ -90,16 +100,26 @@ function Notepad:AddNote(text, save)
     end)
 
     row:SetScript("OnEnter", function()
-        row:SetAlpha(0.7)
+        row.Background:SetColorTexture(0.12, 0.105, 0.085, 0.9)
+        row.Accent:SetColorTexture(0.86, 0.62, 0.25, 1)
     end)
 
     row:SetScript("OnLeave", function()
-        row:SetAlpha(1)
+        row.Background:SetColorTexture(0.07, 0.065, 0.06, 0.72)
+        row.Accent:SetColorTexture(0.56, 0.39, 0.17, 0.65)
         GameTooltip:Hide()
     end)
 
-    row:SetScript("OnMouseDown", function()
-        self:RemoveNote(row)
+    row:SetScript("OnMouseDown", function(_, button)
+        if button == "LeftButton" then
+            self:RemoveNote(row)
+        end
+    end)
+
+    row:SetScript("OnMouseUp", function(_, button)
+        if button == "RightButton" then
+            self:ShowContextMenu()
+        end
     end)
 
     self:_UpdateNotesLayout()
@@ -114,8 +134,8 @@ function Notepad:_ReanchorNotes()
         note:ClearAllPoints()
 
         if prev then
-            note:SetPoint("TOPLEFT",  prev, "BOTTOMLEFT",  0, -4)
-            note:SetPoint("TOPRIGHT", prev, "BOTTOMRIGHT", 0, -4)
+            note:SetPoint("TOPLEFT",  prev, "BOTTOMLEFT",  0, -2)
+            note:SetPoint("TOPRIGHT", prev, "BOTTOMRIGHT", 0, -2)
         else
             note:SetPoint("TOPLEFT",  parent, "TOPLEFT",  0, 0)
             note:SetPoint("TOPRIGHT", parent, "TOPRIGHT", 0, 0)

@@ -1,3 +1,4 @@
+- Added multiple character-specific notepads with individual notes, titles, and settings
 - Updated interface versions
 - Added Forever compatibility
 - Updated color picker from legacy WoW API to newer version

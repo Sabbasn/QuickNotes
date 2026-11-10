@@ -1,5 +1,10 @@
 function NotepadSettings:_InitializeFrame()
-	self.Frame = CreateFrame("Frame", "QN_Settings", UIParent, "PortraitFrameTemplate")
+	self.Frame = CreateFrame(
+		"Frame",
+		"QN_Settings_" .. self.notepad.name,
+		UIParent,
+		"PortraitFrameTemplate"
+	)
 	self.Frame:SetSize(340, 290)
 	self.Frame:SetPoint("CENTER")
 	self.Frame:SetMovable(true)
@@ -23,8 +28,8 @@ function NotepadSettings:_InitializeFrame()
 		portrait:SetTexture("Interface\\AddOns\\QuickNotes\\Images\\QuickNotesIcon.tga")
 	end
 
-	local function AddDivider(name, yOffset)
-		local divider = self.Frame:CreateTexture(name, "BORDER")
+	local function AddDivider(yOffset)
+		local divider = self.Frame:CreateTexture(nil, "BORDER")
 		divider:SetPoint("TOPLEFT", self.Frame, "TOPLEFT", 18, yOffset)
 		divider:SetPoint("TOPRIGHT", self.Frame, "TOPRIGHT", -18, yOffset)
 		divider:SetHeight(1)
@@ -32,21 +37,21 @@ function NotepadSettings:_InitializeFrame()
 		return divider
 	end
 
-	AddDivider("QN_Settings_HeaderDivider", -60)
+	AddDivider(-60)
 
 	self.Frame.AppearanceHeading = self.Frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
 	self.Frame.AppearanceHeading:SetTextColor(1, 0.82, 0, 1)
 	self.Frame.AppearanceHeading:SetPoint("TOPLEFT", self.Frame, 18, -77)
 	self.Frame.AppearanceHeading:SetText("Appearance")
 
-	AddDivider("QN_Settings_DataDivider", -185)
+	AddDivider(-185)
 
 	self.Frame.DataHeading = self.Frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
 	self.Frame.DataHeading:SetTextColor(1, 0.82, 0, 1)
 	self.Frame.DataHeading:SetPoint("TOPLEFT", self.Frame, 18, -202)
 	self.Frame.DataHeading:SetText("Character data")
 
-	AddDivider("QN_Settings_FooterDivider", -252)
+	AddDivider(-252)
 
 	self.Frame.CloseButton:SetScript("OnClick", function()
 		self:Close()

@@ -8,4 +8,5 @@
   <Script file="Services\EventHandler.lua"/>
   <Script file="Services\NoteManager.lua"/>
   <Script file="Services\WindowManager.lua"/>
+  <Script file="Services\CollectionManager.lua"/>
 </Ui>

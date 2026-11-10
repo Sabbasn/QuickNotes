@@ -4,5 +4,6 @@ QuickNotes = {
   Interface = {
     MainFrame = {},
     MinimapButton = {},
+    Notepads = {},
   }
 }

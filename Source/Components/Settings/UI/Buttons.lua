@@ -1,5 +1,5 @@
 function NotepadSettings:_InitializeButtons()
-	self.Frame.ResetCharacterButton = CreateFrame("Button", "QN_Settings_ResetCharacter", self.Frame)
+	self.Frame.ResetCharacterButton = CreateFrame("Button", nil, self.Frame)
 	self.Frame.ResetCharacterButton:SetSize(304, 18)
 	self.Frame.ResetCharacterButton:SetPoint("TOPLEFT", self.Frame, 18, -220)
 	self.Frame.ResetCharacterButton.Text = self.Frame.ResetCharacterButton:CreateFontString(nil, "ARTWORK", "GameFontDisableSmall")
@@ -9,7 +9,7 @@ function NotepadSettings:_InitializeButtons()
 	self.Frame.ResetCharacterButton:SetAlpha(0.8)
 	self.Frame.ResetCharacterButton:SetScript("OnClick", function()
 		StaticPopupDialogs["QUICKNOTES_RESET_CHARACTER"] = {
-			text = "Reset Quick Notes for this character?\n\nThis permanently deletes this character's saved notes and resets its notepad position, size, and settings. Other characters and the minimap icon position will not be changed.",
+			text = "Reset Quick Notes for this character?\n\nThis permanently deletes all of this character's notepads and notes, then resets the notepad settings. Other characters and the minimap icon position will not be changed.",
 			button1 = "Delete Notes & Reset",
 			button2 = CANCEL,
 			OnAccept = function(_, settings)
@@ -32,7 +32,7 @@ function NotepadSettings:_InitializeButtons()
 	end)
 
 	-- Apply Button
-	self.Frame.ApplyButton = CreateFrame("Button", "QN_Settings_Apply", self.Frame, "UIPanelButtonTemplate")
+	self.Frame.ApplyButton = CreateFrame("Button", nil, self.Frame, "UIPanelButtonTemplate")
 	self.Frame.ApplyButton:SetSize(100, 22)
 	self.Frame.ApplyButton:SetPoint("BOTTOMRIGHT", self.Frame, -18, 12)
 	self.Frame.ApplyButton:SetText("Close")
@@ -60,29 +60,7 @@ function NotepadSettings:_ResetToDefaults()
 end
 
 function NotepadSettings:_ResetCharacterData()
-	wipe(CharNotesDB)
-	for _, note in ipairs(self.notepad.notes) do
-		note:Hide()
-		note:SetParent(nil)
-	end
-	wipe(self.notepad.notes)
-
-	wipe(CharSettings)
-	self.notepad.Frame:SetUserPlaced(false)
-	self.notepad.Frame:ClearAllPoints()
-	self.notepad.Frame:SetPoint("CENTER")
-	self.notepad:Maximize()
-	self.notepad:ToggleUILock(false)
-	self.notepad.isMinimized = false
-	self.notepad:_UpdateNotesLayout()
-
-	self.currentColor = {r = 0, g = 0, b = 0, a = 0.3}
-	self.enableHighlight = false
-	self.Frame.ColorPickerButton.Preview:SetColorTexture(0, 0, 0, 0.3)
-	self.Frame.HighlightToggle:SetChecked(false)
-	self.notepad.Frame.Background:SetColorTexture(0, 0, 0, 0.3)
-	self.notepad.Frame.HighlightBorderAnimGroup:Stop()
-	self:SaveSettings()
+	QuickNotes.Interface.ResetNotepads()
 
 	print("|cffffcc00QuickNotes:|r This character's notes and settings have been reset.")
 end

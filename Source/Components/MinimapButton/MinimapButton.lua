@@ -18,21 +18,42 @@ function QuickNotes.Interface.MinimapButton.Initialize()
     UIDropDownMenu_AddButton(info, level)
 
     info = UIDropDownMenu_CreateInfo()
-    info.text = "Help"
+    info.text = "Notepads"
+    info.isTitle = true
     info.notCheckable = true
-    info.func = QuickNotes.SlashCmd.Help
+    UIDropDownMenu_AddButton(info, level)
+
+    for index, notepadData in ipairs(CharacterNotepads.notepads) do
+      local selectedNotepad = QuickNotes.Interface.Notepads[index]
+      info = UIDropDownMenu_CreateInfo()
+      info.text = notepadData.title ~= "" and notepadData.title or ("Notepad " .. index)
+      info.checked = notepadData.visible ~= false
+      info.isNotRadio = true
+      info.keepShownOnClick = true
+      info.func = function()
+        if selectedNotepad then
+          selectedNotepad:SetVisible(not selectedNotepad.visible)
+        else
+          notepadData.visible = not notepadData.visible
+        end
+      end
+      UIDropDownMenu_AddButton(info, level)
+    end
+
+    info = UIDropDownMenu_CreateInfo()
+    info.text = "Create Notepad"
+    info.notCheckable = true
+    info.func = function()
+      QuickNotes.Interface.CreateNotepad()
+    end
     UIDropDownMenu_AddButton(info, level)
 
     info = UIDropDownMenu_CreateInfo()
-    info.text = "Toggle Notepad"
+    info.text = "Reset All Notepads' Position and Size"
     info.notCheckable = true
-    info.func = QuickNotes.SlashCmd.ToggleVisibility
-    UIDropDownMenu_AddButton(info, level)
-
-    info = UIDropDownMenu_CreateInfo()
-    info.text = "Reset Position and Size"
-    info.notCheckable = true
-    info.func = QuickNotes.SlashCmd.ResetPositionAndSize
+    info.func = function()
+      QuickNotes.SlashCmd.ResetPositionAndSize()
+    end
     UIDropDownMenu_AddButton(info, level)
   end, "MENU")
 
@@ -43,13 +64,7 @@ function QuickNotes.Interface.MinimapButton.Initialize()
       if button == "RightButton" then
         ShowMinimapMenu()
       else
-        if (QuickNotes.Interface.MainFrame.Frame:IsShown()) then
-          QuickNotes.Interface.MainFrame.Frame:Hide()
-          CharSettings["visible"] = false
-        else
-          QuickNotes.Interface.MainFrame.Frame:Show()
-          CharSettings["visible"] = true
-        end
+        QuickNotes.Interface.ToggleAllNotepads()
       end
     end,
     OnTooltipShow = function(tooltip)

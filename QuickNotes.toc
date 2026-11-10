@@ -5,7 +5,7 @@
 ## IconTexture: Interface\AddOns\QuickNotes\Images\QuickNotesIcon
 ## Author: Sabbas
 ## SavedVariables: QuickNotesDB
-## SavedVariablesPerCharacter: CharNotesDB, CharSettings
+## SavedVariablesPerCharacter: CharNotesDB, CharSettings, CharacterNotepads
 
 Libs/Embeds.xml
 Source/Manifest.xml

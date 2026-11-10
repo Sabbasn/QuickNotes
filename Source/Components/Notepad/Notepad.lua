@@ -1,15 +1,19 @@
 Notepad = {}
 Notepad.__index = Notepad
 
-function Notepad.new(name)
+function Notepad.new(name, data)
 	local self = setmetatable({}, Notepad)
 	self.name = name
+	self.data = data
 	self.isLocked = false
 	self.isMinimized = false
 	self.notes = {}
 	self.settings = nil
 
 	self:Initialize()
+	if data then
+		self:LoadData(data)
+	end
 	return self
 end
 

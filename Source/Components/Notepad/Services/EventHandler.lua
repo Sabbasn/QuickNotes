@@ -1,14 +1,11 @@
 function Notepad:_InitializeEventHandler()
     self.Frame:RegisterEvent("ADDON_LOADED")
-    self.Frame:RegisterEvent("VARIABLES_LOADED")
     self.Frame:RegisterEvent("PLAYER_UPDATE_RESTING")
     self.Frame:RegisterEvent("PLAYER_STARTED_LOOKING")
     
     self.Frame:SetScript("OnEvent", function(frame, event, arg1)
         if event == "ADDON_LOADED" and arg1 == "QuickNotes" then
             self:OnAddonLoaded()
-        elseif event == "VARIABLES_LOADED" then
-            self:OnVariablesLoaded()
         elseif event == "PLAYER_UPDATE_RESTING" then
             self:OnPlayerRestingStateChanged()
         elseif event == "PLAYER_STARTED_LOOKING" then
@@ -26,28 +23,42 @@ function Notepad:_InitializeEventHandler()
     end)
 end
 
-function Notepad:OnVariablesLoaded()
-    QuickNotes.Database.Initialize()
-    for _, noteData in ipairs(CharNotesDB) do
+function Notepad:LoadData(data)
+    self.data = data
+    self.visible = data.visible ~= false
+    self:_InitializeContextMenu()
+    self.Frame.InputField:SetText("")
+    for _, noteData in ipairs(self.data.notes) do
         self:AddNote(noteData)
     end
-    self.isLocked = CharSettings["frameLocked"] or false
-    self.isMinimized = CharSettings["minimized"] or false
-    self:ToggleUILock(self.isLocked)
-    if self.isMinimized then
-        self:Minimize()
+    self:LoadWindowSettings()
+    if self.settings then
+        self.settings:Reload()
+    else
+        self:_InitializeSettings()
     end
-    self:_InitializeSettings()
+    if self.visible then
+        self.Frame:Show()
+    else
+        self.Frame:Hide()
+    end
 end
 
 function Notepad:OnAddonLoaded()
+    if QuickNotes.Interface.Initialized then
+        return
+    end
+
+    QuickNotes.Database.Initialize()
     QuickNotes.SlashCmd.Initialize()
     QuickNotes.Interface.MinimapButton.Initialize()
+    QuickNotes.Interface.InitializeNotepads(self)
+    QuickNotes.Interface.Initialized = true
     print("|cffffcc00QuickNotes|r loaded!")
 end
 
 function Notepad:OnPlayerRestingStateChanged()
-    if IsResting() and #self.notes > 0 and self.settings.enableHighlight then
+    if IsResting() and #self.notes > 0 and self.settings and self.settings.enableHighlight then
         self.Frame.HighlightBorderAnimGroup:Play()
     else
         self.Frame.HighlightBorderAnimGroup:Stop()

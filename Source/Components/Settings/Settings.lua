@@ -46,4 +46,24 @@ function NotepadSettings:Toggle()
 	end
 end
 
+function NotepadSettings:Reload()
+	self:_LoadSettings()
+	if self.Frame then
+		self.Frame.ColorPickerButton.Preview:SetColorTexture(
+			self.currentColor.r,
+			self.currentColor.g,
+			self.currentColor.b,
+			1
+		)
+		self.Frame.HighlightToggle:SetChecked(self.enableHighlight)
+	end
+	self:_ApplyLoadedSettings()
+
+	if self.enableHighlight and IsResting() and #self.notepad.notes > 0 then
+		self.notepad.Frame.HighlightBorderAnimGroup:Play()
+	else
+		self.notepad.Frame.HighlightBorderAnimGroup:Stop()
+	end
+end
+
 return NotepadSettings
