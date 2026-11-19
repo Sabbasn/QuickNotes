@@ -55,15 +55,16 @@ function Notepad:LoadData(data)
     self.redoStack = {}
     self:_InitializeContextMenu()
     self.Frame.InputField:SetText("")
-    for _, noteData in ipairs(self.data.notes) do
-        self:AddNote(noteData)
-    end
-    self:LoadWindowSettings()
     if self.settings then
         self.settings:Reload()
     else
         self:_InitializeSettings()
     end
+    for _, noteData in ipairs(self.data.notes) do
+        self:AddNote(noteData)
+    end
+    self:LoadWindowSettings()
+    self:ApplyRowColorToNotes()
     if self.visible then
         self.Frame:Show()
     else

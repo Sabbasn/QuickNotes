@@ -1,6 +1,12 @@
 function Notepad:Minimize()
     local width, height = self.Frame:GetSize()
     self.data.settings.frameSize = {width, height}
+    local left, top = self.Frame:GetLeft(), self.Frame:GetTop()
+    if left and top then
+        self._minimizeTopLeft = {x = left, y = top}
+        self.Frame:ClearAllPoints()
+        self.Frame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", left, top)
+    end
     self.Frame:SetSize(width, 25)
     self.Frame:SetResizable(false)
     self.Frame.InputField:Hide()
@@ -34,6 +40,12 @@ function Notepad:Maximize()
         self.Frame:SetSize(225, 300)
     else
         self.Frame:SetSize(unpack(self.data.settings.frameSize))
+    end
+    if self._minimizeTopLeft then
+        local position = self._minimizeTopLeft
+        self.Frame:ClearAllPoints()
+        self.Frame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", position.x, position.y)
+        self._minimizeTopLeft = nil
     end
     self.data.settings.minimized = false
     self.isMinimized = false
