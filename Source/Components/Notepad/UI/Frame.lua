@@ -27,8 +27,7 @@ function Notepad:_InitializeFrame()
 
     self.Frame.Title = self.Frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
     self.Frame.Title:SetTextColor(0.88, 0.87, 0.82, 1)
-    self.Frame.Title:SetPoint("TOPLEFT", self.Frame, 10, -6)
-    self.Frame.Title:SetPoint("TOPRIGHT", self.Frame, "TOPRIGHT", -48, -6)
+    self.Frame.Title:SetPoint("TOPLEFT", self.Frame, "TOPLEFT", 6, -6)
     self.Frame.Title:SetWordWrap(false)
     self.Frame.Title:SetText("")
 

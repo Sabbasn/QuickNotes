@@ -10,6 +10,21 @@ function Notepad:_InitializeInputField()
     hooksecurefunc("HandleModifiedItemClick", function(link)
         if self.Frame and self.Frame.InputField and self.Frame.InputField:HasFocus() then
             self.Frame.InputField:Insert(link)
+            return
+        end
+
+        if self.inlineEditRow and self.inlineEditRow.EditBox and self.inlineEditRow.EditBox:HasFocus() then
+            self.inlineEditRow.EditBox:Insert(link)
+            return
+        end
+
+        for index = 1, 4 do
+            local popup = _G["StaticPopup" .. index]
+            local editBox = popup and popup.EditBox
+            if popup and popup:IsShown() and editBox and editBox:HasFocus() then
+                editBox:Insert(link)
+                return
+            end
         end
     end)
 
@@ -27,6 +42,14 @@ function Notepad:_InitializeInputField()
     -- Hide StackSplitFrame when text changes to prevent it showing when entering hyperlinks
     self.Frame.InputField:SetScript("OnTextChanged", function ()
         StackSplitFrame:Hide()
+    end)
+
+    self.Frame.InputField:SetScript("OnEditFocusGained", function()
+        self:SetHistoryBindings(false)
+    end)
+
+    self.Frame.InputField:SetScript("OnEditFocusLost", function()
+        self:UpdateHistoryBindingsForMouse()
     end)
 
     -- Add note by pressing Enter

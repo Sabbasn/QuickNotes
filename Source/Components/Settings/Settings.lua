@@ -49,12 +49,9 @@ end
 function NotepadSettings:Reload()
 	self:_LoadSettings()
 	if self.Frame then
-		self.Frame.ColorPickerButton.Preview:SetColorTexture(
-			self.currentColor.r,
-			self.currentColor.g,
-			self.currentColor.b,
-			1
-		)
+		self.Frame.ColorPickers.backgroundColor.Preview:SetColorTexture(self.currentColor.r, self.currentColor.g, self.currentColor.b, 1)
+		self.Frame.ColorPickers.headerColor.Preview:SetColorTexture(self.currentHeaderColor.r, self.currentHeaderColor.g, self.currentHeaderColor.b, 1)
+		self.Frame.ColorPickers.rowColor.Preview:SetColorTexture(self.currentRowColor.r, self.currentRowColor.g, self.currentRowColor.b, 1)
 		self.Frame.HighlightToggle:SetChecked(self.enableHighlight)
 	end
 	self:_ApplyLoadedSettings()

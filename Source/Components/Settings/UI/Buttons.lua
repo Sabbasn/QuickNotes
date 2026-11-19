@@ -1,7 +1,7 @@
 function NotepadSettings:_InitializeButtons()
 	self.Frame.ResetCharacterButton = CreateFrame("Button", nil, self.Frame)
 	self.Frame.ResetCharacterButton:SetSize(304, 18)
-	self.Frame.ResetCharacterButton:SetPoint("TOPLEFT", self.Frame, 18, -220)
+	self.Frame.ResetCharacterButton:SetPoint("TOPLEFT", self.Frame, 18, -294)
 	self.Frame.ResetCharacterButton.Text = self.Frame.ResetCharacterButton:CreateFontString(nil, "ARTWORK", "GameFontDisableSmall")
 	self.Frame.ResetCharacterButton.Text:SetPoint("LEFT", self.Frame.ResetCharacterButton, "LEFT", 0, 0)
 	self.Frame.ResetCharacterButton.Text:SetTextColor(0.65, 0.68, 0.73)
@@ -41,21 +41,17 @@ function NotepadSettings:_InitializeButtons()
 	end)
 end
 
-function NotepadSettings:_ResetToDefaults()
-	self.currentColor.r = 0
-	self.currentColor.g = 0
-	self.currentColor.b = 0
-	self.currentColor.a = 0.3
-	self.Frame.ColorPickerButton.Preview:SetColorTexture(
-		self.currentColor.r,
-		self.currentColor.g,
-		self.currentColor.b,
-		self.currentColor.a)
-	
-	if self.notepad and self.notepad.Frame and self.notepad.Frame.Background then
-		self.notepad.Frame.Background:SetColorTexture(0, 0, 0, 0.3)
-		self.notepad.backgroundOpacity = 0.3
-	end
+function NotepadSettings:_ResetToDefaults(colorKey)
+	local defaults = {
+		backgroundColor = {r = 0, g = 0, b = 0, a = 0.3},
+		headerColor = {r = 0.07, g = 0.065, b = 0.06, a = 0.96},
+		rowColor = {r = 0.07, g = 0.065, b = 0.06, a = 0.72},
+	}
+	local color = self:_GetColorState(colorKey)
+	local default = defaults[colorKey]
+	color.r, color.g, color.b, color.a = default.r, default.g, default.b, default.a
+	self.Frame.ColorPickers[colorKey].Preview:SetColorTexture(color.r, color.g, color.b, 1)
+	self:_ApplyColor(colorKey)
 	self:SaveSettings()
 end
 

@@ -16,16 +16,43 @@ function Notepad:_InitializeEventHandler()
     -- Mouse Enter
     self.Frame:SetScript("OnEnter", function()
         self.Frame.HighlightBorderAnimGroup:Stop()
+        self:SetHoverControlsVisible(true)
+        self:SetHistoryBindings(true)
     end)
 
     -- Mouse Leave
     self.Frame:SetScript("OnLeave", function()
+        self:UpdateHistoryBindingsForMouse()
+    end)
+
+    self.hoverCheckElapsed = 0
+    self.hoverControlsActive = false
+    self.Frame:SetScript("OnUpdate", function(frame, elapsed)
+        self.hoverCheckElapsed = (self.hoverCheckElapsed or 0) + elapsed
+        if self.hoverCheckElapsed < 0.1 then
+            return
+        end
+        self.hoverCheckElapsed = 0
+
+        local isHovered = frame:IsMouseOver()
+        if isHovered ~= self.hoverControlsActive then
+            self.hoverControlsActive = isHovered
+            self:SetHoverControlsVisible(isHovered)
+            if isHovered then
+                self:SetHistoryBindings(true)
+            else
+                self:SetHistoryBindings(false)
+            end
+        end
     end)
 end
 
 function Notepad:LoadData(data)
     self.data = data
     self.visible = data.visible ~= false
+    self.notes = {}
+    self.undoStack = {}
+    self.redoStack = {}
     self:_InitializeContextMenu()
     self.Frame.InputField:SetText("")
     for _, noteData in ipairs(self.data.notes) do

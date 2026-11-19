@@ -10,6 +10,18 @@ function NotepadSettings:SaveSettings()
 		b = self.currentColor.b,
 		a = self.currentColor.a
 	}
+	settings.notepadSettings.headerColor = {
+		r = self.currentHeaderColor.r,
+		g = self.currentHeaderColor.g,
+		b = self.currentHeaderColor.b,
+		a = self.currentHeaderColor.a
+	}
+	settings.notepadSettings.rowColor = {
+		r = self.currentRowColor.r,
+		g = self.currentRowColor.g,
+		b = self.currentRowColor.b,
+		a = self.currentRowColor.a
+	}
 	
 	settings.notepadSettings.enableHighlight = self.enableHighlight
 
@@ -35,6 +47,13 @@ function NotepadSettings:_LoadSettings()
 		-- Use defaults
 		self.currentColor = {r = 0, g = 0, b = 0, a = 0.3}
 	end
+
+	self.currentHeaderColor = settings.notepadSettings.headerColor or {
+		r = 0.07, g = 0.065, b = 0.06, a = 0.96
+	}
+	self.currentRowColor = settings.notepadSettings.rowColor or {
+		r = 0.07, g = 0.065, b = 0.06, a = 0.72
+	}
 end
 
 function NotepadSettings:_ApplyLoadedSettings()
@@ -49,6 +68,13 @@ function NotepadSettings:_ApplyLoadedSettings()
 		local b = self.currentColor.b or 0
 		local a = self.currentColor.a or 0.3
 		self.notepad.Frame.Background:SetColorTexture(r, g, b, a)
+		self.notepad.Frame.Header:SetColorTexture(
+			self.currentHeaderColor.r or 0.07,
+			self.currentHeaderColor.g or 0.065,
+			self.currentHeaderColor.b or 0.06,
+			self.currentHeaderColor.a or 0.96
+		)
+		self.notepad:ApplyRowColorToNotes()
 		self.Frame.HighlightToggle:SetChecked(self.enableHighlight)
 	end
 end

@@ -5,7 +5,7 @@ function NotepadSettings:_InitializeFrame()
 		UIParent,
 		"PortraitFrameTemplate"
 	)
-	self.Frame:SetSize(340, 290)
+	self.Frame:SetSize(340, 390)
 	self.Frame:SetPoint("CENTER")
 	self.Frame:SetMovable(true)
 	self.Frame:EnableMouse(true)
@@ -44,14 +44,14 @@ function NotepadSettings:_InitializeFrame()
 	self.Frame.AppearanceHeading:SetPoint("TOPLEFT", self.Frame, 18, -77)
 	self.Frame.AppearanceHeading:SetText("Appearance")
 
-	AddDivider(-185)
+	AddDivider(-258)
 
 	self.Frame.DataHeading = self.Frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
 	self.Frame.DataHeading:SetTextColor(1, 0.82, 0, 1)
-	self.Frame.DataHeading:SetPoint("TOPLEFT", self.Frame, 18, -202)
+	self.Frame.DataHeading:SetPoint("TOPLEFT", self.Frame, 18, -275)
 	self.Frame.DataHeading:SetText("Character data")
 
-	AddDivider(-252)
+	AddDivider(-330)
 
 	self.Frame.CloseButton:SetScript("OnClick", function()
 		self:Close()

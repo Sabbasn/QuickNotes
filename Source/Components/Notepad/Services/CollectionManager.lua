@@ -37,6 +37,7 @@ function QuickNotes.Interface.ResetNotepads()
     local keeper = notepads[1]
 
     for _, notepad in ipairs(notepads) do
+        notepad:SetHistoryBindings(false)
         if notepad.settings and notepad.settings.isOpen then
             notepad.settings:Close()
         end
@@ -105,6 +106,8 @@ function Notepad:_InitializeContextMenu()
         self.Frame.ToggleMinimizeButton,
         self.Frame.SettingsButton,
         self.Frame.AddButton,
+        self.Frame.UndoButton,
+        self.Frame.RedoButton,
         self.Frame.ResizeButton,
         self.Frame.LockButton,
     }) do
@@ -118,6 +121,36 @@ end
 
 function Notepad:ShowContextMenu()
     ToggleDropDownMenu(1, nil, self.ContextMenu, "cursor", 0, 0)
+end
+
+function Notepad:ShowNoteContextMenu(note)
+    if not self.NoteContextMenu then
+        self.NoteContextMenu = CreateFrame("Frame", nil, UIParent, "UIDropDownMenuTemplate")
+        UIDropDownMenu_Initialize(self.NoteContextMenu, function(_, level)
+            local info = UIDropDownMenu_CreateInfo()
+            info.text = "Edit note..."
+            info.notCheckable = true
+            info.func = function()
+                if self.NoteContextMenuNote then
+                    self:StartInlineEdit(self.NoteContextMenuNote)
+                end
+            end
+            UIDropDownMenu_AddButton(info, level)
+
+            info = UIDropDownMenu_CreateInfo()
+            info.text = "Delete note"
+            info.notCheckable = true
+            info.func = function()
+                if self.NoteContextMenuNote then
+                    self:RemoveNote(self.NoteContextMenuNote)
+                end
+            end
+            UIDropDownMenu_AddButton(info, level)
+        end, "MENU")
+    end
+
+    self.NoteContextMenuNote = note
+    ToggleDropDownMenu(1, nil, self.NoteContextMenu, "cursor", 0, 0)
 end
 
 function Notepad:Rename(title)
@@ -186,6 +219,7 @@ function Notepad:Delete()
     if self.settings and self.settings.isOpen then
         self.settings:Close()
     end
+    self:SetHistoryBindings(false)
     self.Frame:Hide()
     self.Frame:UnregisterAllEvents()
 

@@ -5,7 +5,7 @@ function NotepadSettings:_InitializeHighlightToggle()
 		self.Frame,
 		"UICheckButtonTemplate"
 	)
-	self.Frame.HighlightToggle:SetPoint("TOPLEFT", self.Frame, 14, -120)
+	self.Frame.HighlightToggle:SetPoint("TOPLEFT", self.Frame, 14, -199)
 	self.Frame.HighlightToggle.Text:SetText("Enable Highlighting")
 	self.Frame.HighlightToggle.Text:SetFontObject("GameFontNormal")
 
@@ -16,7 +16,7 @@ function NotepadSettings:_InitializeHighlightToggle()
 	end)
 
 	self.Frame.HighlightDescription = self.Frame:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
-	self.Frame.HighlightDescription:SetPoint("TOPLEFT", self.Frame, 45, -153)
+	self.Frame.HighlightDescription:SetPoint("TOPLEFT", self.Frame, 45, -232)
 	self.Frame.HighlightDescription:SetText("Highlights the notepad when you enter a rested zone.")
 
 	self.Frame.HighlightToggle:SetScript("OnEnter", function()

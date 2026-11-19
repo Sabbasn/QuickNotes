@@ -2,3 +2,10 @@
 - Updated interface versions
 - Added Forever compatibility
 - Updated color picker from legacy WoW API to newer version
+- Added per-notepad header and note row colors
+- Added opacity controls for header and note row colors
+- Replaced Undo/Redo text buttons with arrow icons
+- Increased header Undo/Redo button size
+- Restyled the settings button to match header icons
+- Added inline note editing
+- Added note editing with undo and redo controls and keyboard shortcuts

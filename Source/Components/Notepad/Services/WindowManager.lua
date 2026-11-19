@@ -5,12 +5,15 @@ function Notepad:Minimize()
     self.Frame:SetResizable(false)
     self.Frame.InputField:Hide()
     self.Frame.AddButton:Hide()
+	self.Frame.UndoButton:Hide()
+	self.Frame.RedoButton:Hide()
 	self.Frame.ResizeButton:Hide()
 	self.Frame.LockButton:Hide()
     if self.Frame.NoteField then
         self.Frame.NoteField:Hide()
     end
     self.Frame.ScrollFrame:Hide()
+    self:SetHistoryBindings(false)
     self.Frame.ToggleMinimizeButton:SetText("+")
     self.data.settings.minimized = true
     self.isMinimized = true
@@ -20,11 +23,8 @@ function Notepad:Maximize()
     self.Frame:SetResizable(true)
     self.Frame.InputField:Show()
     self.Frame.AddButton:Show()
-	self.Frame.ResizeButton:Show()
-	if self.isLocked then
-		self.Frame.ResizeButton:Hide()
-	end
-	self.Frame.LockButton:Show()
+    self.Frame.UndoButton:Show()
+    self.Frame.RedoButton:Show()
     if self.Frame.NoteField then
         self.Frame.NoteField:Show()
     end
@@ -37,6 +37,8 @@ function Notepad:Maximize()
     end
     self.data.settings.minimized = false
     self.isMinimized = false
+	self:SetHoverControlsVisible(self.Frame:IsMouseOver())
+    self:UpdateHistoryBindingsForMouse()
 end
 
 function Notepad:ToggleMinimize()
@@ -51,12 +53,11 @@ function Notepad:ToggleUILock(locked)
 	if locked then
 		self.isLocked = true
 		self.Frame.LockButton:SetText("unlock")
-		self.Frame.ResizeButton:Hide()
 	else
 		self.isLocked = false
 		self.Frame.LockButton:SetText("lock")
-		self.Frame.ResizeButton:Show()
 	end
+	self:SetHoverControlsVisible(self.Frame:IsMouseOver())
     self.data.settings.frameLocked = self.isLocked
 end
 
@@ -110,7 +111,11 @@ function Notepad:SetVisible(visible)
     self.data.visible = visible
     if visible then
         self.Frame:Show()
+        self:SetHoverControlsVisible(self.Frame:IsMouseOver())
+        self:UpdateHistoryBindingsForMouse()
     else
+        self:SetHoverControlsVisible(false)
+        self:SetHistoryBindings(false)
         self.Frame:Hide()
     end
 end
